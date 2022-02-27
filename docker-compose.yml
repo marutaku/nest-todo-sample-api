@@ -1,0 +1,21 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: docker/backend/Dockerfile
+    volumes:
+      - .:/workspace:cached
+      - /workspace/node_modules
+    ports:
+      - 3000:3000
+  postgresql:
+    image: postgres:14.2
+    volumes:
+      - postgres-data:/var/lib/pgsql
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=todo_db
+volumes:
+  postgres-data:

@@ -1,30 +1,34 @@
-import { Entity, Column, PrimaryGeneratedColumn, Timestamp, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class Todo {
+export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
     length: 24,
-    nullable: false
+    nullable: false,
   })
   title: string;
 
-  @Column()
+  @Column({ default: null })
   description: string;
 
-  @Column({
-    nullable: false
-  })
-  deadline: Timestamp
+  @Column('date', { default: null })
+  deadline: Date | null = null;
 
   @Column()
-  finished: boolean;
+  status: string;
+
   @CreateDateColumn()
   readonly createdAt?: Date;
 
   @UpdateDateColumn()
   readonly updatedAt?: Date;
 }
-

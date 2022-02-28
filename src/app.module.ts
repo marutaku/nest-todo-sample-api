@@ -2,14 +2,25 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TaskController } from './task/task.controller';
-// import { Todo } from './task/task.entity';
+import { TaskModule } from './task/task.module';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmConfigService } from 'config/typeorm-config.service';
 
 @Module({
-  // imports: [
-  //   TypeOrmModule.forRoot({ entities: [Todo] })
-  // ],
-  controllers: [AppController, TaskController],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: [`.env/${process.env.NODE_ENV}.env`, '.env/default.env'],
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      // TypeOrmConfigServiceで必要な依存関係?を追加
+      imports: [ConfigModule],
+      // サービスクラスを指定する
+      useClass: TypeOrmConfigService,
+    }),
+    TaskModule,
+  ],
+  controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

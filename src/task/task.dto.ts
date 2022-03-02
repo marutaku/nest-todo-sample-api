@@ -9,5 +9,5 @@ export class TaskDto {
 
   @IsOptional()
   @IsDate()
-  deadline?: string | undefined;
+  deadline?: Date | undefined;
 }

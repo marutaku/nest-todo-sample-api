@@ -8,32 +8,34 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Inject,
 } from '@nestjs/common';
 import { TaskDto } from './task.dto';
 import { TaskStatusPipe } from './task.pipe';
+import { TasksService } from './task.service';
 
 @Controller('tasks')
 export class TaskController {
+  constructor(@Inject(TasksService) private tasksService: TasksService) {}
   @Get()
   getTasks() {
-    return 'getTasks Success!';
+    return this.tasksService.getTasks();
   }
 
   @Get('/:id')
   getTaskById(@Param('id', ParseIntPipe) id: number) {
-    return `getTaskById Success! Parameter [id:${id}]`;
+    return this.tasksService.getTaskById(id);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
   createTask(@Body() taskDto: TaskDto) {
-    const { title, description } = taskDto;
-    return `createTask Success! Prameter [title:${title}, descritpion:${description}]`;
+    return this.tasksService.createTask(taskDto);
   }
 
   @Delete('/:id')
   deleteTask(@Param('id', ParseIntPipe) id: number) {
-    return `deleteTask Success! Prameter [id:${id}]`;
+    return this.tasksService.deleteTask(id);
   }
 
   @Post('/:id')
@@ -41,6 +43,6 @@ export class TaskController {
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusPipe) status: string,
   ) {
-    return `updateTask Success! Prameter [id:${id}, status:${status}]`;
+    return this.tasksService.updateTask(id, status);
   }
 }

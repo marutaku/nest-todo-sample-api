@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TaskModule } from './task/task.module';
+import { TasksModule } from './task/tasks.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmConfigService } from 'config/typeorm-config.service';
 
@@ -18,7 +18,7 @@ import { TypeOrmConfigService } from 'config/typeorm-config.service';
       // サービスクラスを指定する
       useClass: TypeOrmConfigService,
     }),
-    TaskModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

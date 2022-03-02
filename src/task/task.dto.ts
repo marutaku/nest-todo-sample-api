@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsDate, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsDateString } from 'class-validator';
 
 export class TaskDto {
   @IsNotEmpty()
@@ -8,6 +8,6 @@ export class TaskDto {
   description?: string | undefined;
 
   @IsOptional()
-  @IsDate()
-  deadline?: Date | undefined;
+  @IsDateString()
+  deadline?: string | undefined;
 }

@@ -31,7 +31,7 @@ export class TasksService {
     const task = new Task();
     task.title = title;
     task.description = description;
-    task.deadline = deadline;
+    task.deadline = new Date(Date.parse(deadline));
     task.status = 'OPEN';
     try {
       await this.taskRepository.save(task);

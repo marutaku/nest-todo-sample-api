@@ -16,7 +16,7 @@ const generateMockTask = (mock = {}) => {
     {
       title: 'mockTitle',
       description: 'mockDescription',
-      deadline: new Date(),
+      deadline: new Date().toISOString(),
     },
     mock,
   );

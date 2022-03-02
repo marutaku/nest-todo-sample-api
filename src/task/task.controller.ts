@@ -9,6 +9,7 @@ import {
   UsePipes,
   ValidationPipe,
   Inject,
+  Put,
 } from '@nestjs/common';
 import { TaskDto } from './task.dto';
 import { TaskStatusPipe } from './task.pipe';
@@ -38,7 +39,7 @@ export class TaskController {
     return this.tasksService.deleteTask(id);
   }
 
-  @Post('/:id')
+  @Put('/:id')
   updateTask(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusPipe) status: string,

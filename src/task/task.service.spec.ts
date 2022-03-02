@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Task } from './task.entity';
-import { TaskService } from './task.service';
+import { TasksService } from './task.service';
 
 const mockRepository = () => ({
   find: jest.fn(),
@@ -22,19 +22,19 @@ const generateMockTask = (mock = {}) => {
   );
 };
 
-describe('TaskService', () => {
-  let tasksService: TaskService;
+describe('TasksService', () => {
+  let tasksService: TasksService;
   let taskRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        TaskService,
+        TasksService,
         { provide: getRepositoryToken(Task), useFactory: mockRepository },
       ],
     }).compile();
 
-    tasksService = await module.get<TaskService>(TaskService);
+    tasksService = await module.get<TasksService>(TasksService);
     taskRepository = await module.get(getRepositoryToken(Task));
   });
 

@@ -9,7 +9,7 @@ import { TaskDto } from './task.dto';
 import { Task } from './task.entity';
 
 @Injectable()
-export class TaskService {
+export class TasksService {
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}

@@ -12,8 +12,8 @@ const ormconfig: ConnectionOptions = {
   database: process.env.DB_NAME,
   synchronize: process.env.DB_SYNC !== 'false' || true,
   logging: false,
-  entities: [__dirname + '../**/*.entity.{js,ts}'],
-  migrations: [__dirname + '../migrations/**/*.ts'],
+  entities: ['./src/**/*.entity.{js,ts}'],
+  migrations: ['migrations/**/*.ts'],
   cli: {
     migrationsDir: 'migrations',
   },

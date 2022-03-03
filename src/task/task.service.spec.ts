@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { TasksService } from './task.service';
 
+// TODO: DRYではないので，どこかで共通化したい
 const mockRepository = () => ({
   find: jest.fn(),
   findOne: jest.fn(),
@@ -79,7 +80,7 @@ describe('TasksService', () => {
       expect(result).toEqual({
         title: mockTask.title,
         description: mockTask.description,
-        deadline: mockTask.deadline,
+        deadline: new Date(mockTask.deadline),
         // ステータスがセットされるか
         status: 'OPEN',
       });

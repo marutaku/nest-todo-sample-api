@@ -16,7 +16,7 @@ export class BoardsService {
   async getBoardById(boardId): Promise<Board> {
     const board = await this.boardRepository.findOne(boardId);
     if (!board) {
-      throw new NotFoundException('task not found');
+      throw new NotFoundException('board not found');
     }
     return board;
   }

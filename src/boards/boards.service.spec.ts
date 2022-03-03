@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Board } from './board.entity';
@@ -37,12 +38,32 @@ describe('BoardsService', () => {
   });
 
   describe('BoardsService', () => {
-    it('getBoards', async () => {
-      const mockBoard = generateMockBoard();
-      boardRepository.find.mockResolvedValue([mockBoard]);
-      const result = await boardsService.getBoards();
-      expect(boardRepository.find).toHaveBeenCalled();
-      expect(result).toEqual([mockBoard]);
+    describe('getBoards', () => {
+      it('get all task', async () => {
+        const mockBoard = generateMockBoard();
+        boardRepository.find.mockResolvedValue([mockBoard]);
+        const result = await boardsService.getBoards();
+        expect(boardRepository.find).toHaveBeenCalled();
+        expect(result).toEqual([mockBoard]);
+      });
+    });
+
+    describe('getTaskById', () => {
+      const mockId = 1;
+      it('get task by id', async () => {
+        const mockBoard = generateMockBoard();
+        boardRepository.findOne.mockResolvedValue(mockBoard);
+        const result = await boardsService.getBoardById(mockId);
+        expect(boardRepository.findOne).toHaveBeenCalled();
+        expect(result).toEqual(mockBoard);
+      });
+
+      it('raise error if not found', async () => {
+        boardRepository.findOne.mockResolvedValue(null);
+        expect(boardsService.getBoardById(mockId)).rejects.toThrowError(
+          NotFoundException,
+        );
+      });
     });
   });
 });

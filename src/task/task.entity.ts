@@ -1,15 +1,20 @@
+import { Board } from 'src/boards/board.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne((type) => Board, { onDelete: 'CASCADE' })
+  board: Board;
 
   @Column({
     length: 24,

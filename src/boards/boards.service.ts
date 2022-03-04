@@ -36,4 +36,11 @@ export class BoardsService {
     board.description = boardProps.description || board.description;
     return this.boardRepository.save(board);
   }
+
+  async deleteBoard(boardId: number): Promise<void> {
+    const { affected } = await this.boardRepository.delete(boardId);
+    if (!affected) {
+      throw new NotFoundException('board not found');
+    }
+  }
 }

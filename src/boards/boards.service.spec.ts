@@ -39,7 +39,7 @@ describe('BoardsService', () => {
 
   describe('BoardsService', () => {
     describe('getBoards', () => {
-      it('get all task', async () => {
+      it('get all board', async () => {
         const mockBoard = generateMockBoard();
         boardRepository.find.mockResolvedValue([mockBoard]);
         const result = await boardsService.getBoards();
@@ -48,9 +48,9 @@ describe('BoardsService', () => {
       });
     });
 
-    describe('getTaskById', () => {
+    describe('getBoardById', () => {
       const mockId = 1;
-      it('get task by id', async () => {
+      it('get board by id', async () => {
         const mockBoard = generateMockBoard();
         boardRepository.findOne.mockResolvedValue(mockBoard);
         const result = await boardsService.getBoardById(mockId);
@@ -76,14 +76,29 @@ describe('BoardsService', () => {
       });
     });
 
-    describe('updataTask', () => {
-      it('update task', async () => {
+    describe('updataBoard', () => {
+      it('update board', async () => {
         const mockBoard = generateMockBoard({ id: 1, name: 'updated' });
         boardsService.getBoardById = jest.fn().mockResolvedValue(mockBoard);
         boardRepository.save.mockResolvedValue(mockBoard);
         const result = await boardsService.updateBoard(1, mockBoard);
         expect(boardRepository.save).toHaveBeenCalled();
         expect(result).toEqual(mockBoard);
+      });
+    });
+
+    describe('deleteBoard', () => {
+      it('delete board', async () => {
+        boardRepository.delete.mockResolvedValue({ affected: 1 });
+        await boardsService.deleteBoard(1);
+        expect(boardRepository.delete).toHaveBeenCalled();
+      });
+
+      it('board not found', async () => {
+        boardRepository.delete.mockResolvedValue({ affected: null });
+        expect(boardsService.deleteBoard(1)).rejects.toThrowError(
+          NotFoundException,
+        );
       });
     });
   });

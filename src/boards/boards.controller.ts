@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -40,5 +41,10 @@ export class BoardsController {
     @Body() boardProps: BoardDto,
   ) {
     return this.boardsService.updateBoard(id, boardProps);
+  }
+
+  @Delete(':id')
+  deleteBoard(@Param('id', ParseIntPipe) id: number) {
+    return this.boardsService.deleteBoard(id);
   }
 }

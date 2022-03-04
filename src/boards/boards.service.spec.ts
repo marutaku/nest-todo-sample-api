@@ -15,7 +15,7 @@ const mockRepository = () => ({
 const generateMockBoard = (customProperties = {}) =>
   Object.assign(
     {
-      title: 'mock board',
+      name: 'mock board',
       description: 'mock board description',
     },
     customProperties,
@@ -63,6 +63,27 @@ describe('BoardsService', () => {
         expect(boardsService.getBoardById(mockId)).rejects.toThrowError(
           NotFoundException,
         );
+      });
+    });
+
+    describe('createBoard', () => {
+      it('create board', async () => {
+        const mockBoard = generateMockBoard();
+        boardRepository.save.mockResolvedValue(mockBoard);
+        const result = await boardsService.createBoard(mockBoard);
+        expect(boardRepository.save).toHaveBeenCalled();
+        expect(result).toEqual(mockBoard);
+      });
+    });
+
+    describe('updataTask', () => {
+      it('update task', async () => {
+        const mockBoard = generateMockBoard({ id: 1, name: 'updated' });
+        boardsService.getBoardById = jest.fn().mockResolvedValue(mockBoard);
+        boardRepository.save.mockResolvedValue(mockBoard);
+        const result = await boardsService.updateBoard(1, mockBoard);
+        expect(boardRepository.save).toHaveBeenCalled();
+        expect(result).toEqual(mockBoard);
       });
     });
   });

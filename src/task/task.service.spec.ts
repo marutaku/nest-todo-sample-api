@@ -26,7 +26,6 @@ const mockBoardService = {
 const generateMockTask = (mock = {}) => {
   return Object.assign(
     {
-      board: mockBoard,
       title: 'mockTitle',
       description: 'mockDescription',
       deadline: new Date().toISOString(),
@@ -98,7 +97,6 @@ describe('TasksService', () => {
       const result = await tasksService.createTask(mockTask, mockBoardId);
       expect(taskRepository.save).toHaveBeenCalled();
       expect(result).toEqual({
-        board: mockBoard,
         title: mockTask.title,
         description: mockTask.description,
         deadline: new Date(mockTask.deadline),

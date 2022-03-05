@@ -47,6 +47,8 @@ export class TasksService {
     } catch (e) {
       throw new InternalServerErrorException();
     }
+    // Boardの情報は
+    delete task.board
     return task;
   }
 

@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './task/tasks.module';
 import { ConfigModule } from '@nestjs/config';
+import { BoardsModule } from './boards/boards.module';
 import { TypeOrmConfigService } from 'config/typeorm-config.service';
 
 @Module({
@@ -19,6 +20,7 @@ import { TypeOrmConfigService } from 'config/typeorm-config.service';
       useClass: TypeOrmConfigService,
     }),
     TasksModule,
+    BoardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

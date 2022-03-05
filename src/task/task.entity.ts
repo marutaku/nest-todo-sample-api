@@ -1,4 +1,4 @@
-import { Board } from 'src/boards/board.entity';
+import { Board } from '../../src/boards/board.entity';
 import {
   Entity,
   Column,
@@ -13,7 +13,7 @@ export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne((type) => Board, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Board, { onDelete: 'CASCADE' })
   board: Board;
 
   @Column({

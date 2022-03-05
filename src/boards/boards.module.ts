@@ -8,5 +8,6 @@ import { BoardsService } from './boards.service';
   imports: [TypeOrmModule.forFeature([Board])],
   controllers: [BoardsController],
   providers: [BoardsService],
+  exports: [BoardsService],
 })
 export class BoardsModule {}

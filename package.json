@@ -8,19 +8,25 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "format": "yarn lint:prettier && yarn format:eslint",
+    "lint:eslint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint:prettier": "prettier --check src/**/*.ts test/**/*.ts",
     "format:eslint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "format:prettier": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "fix": "yarn format && yarn lint",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config config/typeorm-cli-config.ts"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config config/typeorm-cli-config.ts",
+    "commitmsg": "commitlint -e $GIT_PARAMS",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nestjs/common": "8.3.1",
@@ -59,7 +65,10 @@
     "ts-loader": "9.2.6",
     "ts-node": "10.5.0",
     "tsconfig-paths": "3.12.0",
-    "typescript": "4.5.5"
+    "typescript": "4.5.5",
+    "husky": "^7.0.4",
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1"
   },
   "jest": {
     "moduleFileExtensions": [

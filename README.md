@@ -1,7 +1,8 @@
-# NestJS練習アプリ
+# NestJS 練習アプリ
 
 ## これは何？
-NestJSの練習として，TODOアプリ用のAPIを作っている
+
+NestJS の練習として，TODO アプリ用の API を作っている
 
 ## 動かし方
 
@@ -10,4 +11,9 @@ docker-compose up
 ```
 
 ## 開発方法
-VSCodeのRemote-Containersを使用する
+
+VSCode の Remote-Containers を使用する
+
+
+## デプロイ
+未定

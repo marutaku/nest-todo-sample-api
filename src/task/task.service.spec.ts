@@ -1,17 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BoardsService } from '../../src/boards/boards.service';
+import { BoardsService } from '../boards/boards.service';
+import { generateMockRepository } from '../share/test-support';
 import { Task } from './task.entity';
 import { TasksService } from './task.service';
-
-// TODO: DRYではないので，どこかで共通化したい
-const mockRepository = () => ({
-  find: jest.fn(),
-  findOne: jest.fn(),
-  save: jest.fn(),
-  delete: jest.fn(),
-});
 
 const mockBoard = {
   id: 1,
@@ -44,7 +37,10 @@ describe('TasksService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TasksService,
-        { provide: getRepositoryToken(Task), useFactory: mockRepository },
+        {
+          provide: getRepositoryToken(Task),
+          useFactory: generateMockRepository,
+        },
       ],
     })
       .useMocker((token) => {

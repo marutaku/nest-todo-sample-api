@@ -351,7 +351,7 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@commitlint/cli@^16.2.1":
+"@commitlint/cli@16.2.1":
   version "16.2.1"
   resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-16.2.1.tgz#ca4e557829a2755f0e1f0cd69b56b83ce2510173"
   integrity sha512-zfKf+B9osuiDbxGMJ7bWFv7XFCW8wlQYPtCffNp7Ukdb7mdrep5R9e03vPUZysnwp8NX6hg05kPEvnD/wRIGWw==
@@ -366,7 +366,7 @@
     resolve-global "1.0.0"
     yargs "^17.0.0"
 
-"@commitlint/config-conventional@^16.2.1":
+"@commitlint/config-conventional@16.2.1":
   version "16.2.1"
   resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-16.2.1.tgz#2cf47b505fb259777c063538c8498d8fd9b47779"
   integrity sha512-cP9gArx7gnaj4IqmtCIcHdRjTYdRUi6lmGE+lOzGGjGe45qGOS8nyQQNvkNy2Ey2VqoSWuXXkD8zCUh6EHf1Ww==
@@ -829,7 +829,18 @@
     multer "1.4.4"
     tslib "2.3.1"
 
-"@nestjs/schematics@8.0.7", "@nestjs/schematics@^8.0.3":
+"@nestjs/schematics@8.0.8":
+  version "8.0.8"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.8.tgz#b1612b535c1007d1503b7e624795708055460432"
+  integrity sha512-xIIb5YnMQN/OJQ68+MCapy2bXvTxSWgINoqQbyZWkLL/yTIuROvZCdtV850NPGyr7f7l93VBP0ZPitbFIexy3Q==
+  dependencies:
+    "@angular-devkit/core" "13.2.5"
+    "@angular-devkit/schematics" "13.2.5"
+    fs-extra "10.0.1"
+    jsonc-parser "3.0.0"
+    pluralize "8.0.0"
+
+"@nestjs/schematics@^8.0.3":
   version "8.0.7"
   resolved "https://registry.npmjs.org/@nestjs/schematics/-/schematics-8.0.7.tgz"
   integrity sha512-7k+eMMBUwvXFp6vwZ5byiLBEQKzjMyIJwO46ginoFugt2AXrOt0iUhR3BKFuWDBZaYQ1l4az86UGw5ohgH3wow==
@@ -3095,7 +3106,7 @@ human-signals@^2.1.0:
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-2.1.0.tgz"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-husky@^7.0.4:
+husky@7.0.4:
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.4.tgz#242048245dc49c8fb1bf0cc7cfb98dd722531535"
   integrity sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==

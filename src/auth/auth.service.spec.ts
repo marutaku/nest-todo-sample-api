@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 const mockUser = { name: 'test', password: 'testpass' };
 
 const mockUserService = {
-  findByName: jest.fn(),
+  findByNameAndPassword: jest.fn(),
 };
 
 describe('AuthService', () => {
@@ -27,7 +27,7 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('validate user succeeded', async () => {
-      mockUserService.findByName.mockResolvedValue(mockUser);
+      mockUserService.findByNameAndPassword.mockResolvedValue(mockUser);
       const result = await service.validateUser(
         mockUser.name,
         mockUser.password,
@@ -36,7 +36,7 @@ describe('AuthService', () => {
       expect(result).not.toHaveProperty('password');
     });
     it('user not found', async () => {
-      mockUserService.findByName.mockResolvedValue(undefined);
+      mockUserService.findByNameAndPassword.mockResolvedValue(undefined);
       const result = await service.validateUser(
         mockUser.name,
         mockUser.password,

@@ -5,10 +5,13 @@ import { UsersService } from '../users/users.service';
 export class AuthService {
   constructor(private userService: UsersService) {}
   async validateUser(username: string, password: string) {
-    const user = await this.userService.findByName(username, password);
+    const user = await this.userService.findByNameAndPassword(
+      username,
+      password,
+    );
     if (user) {
-      const { password, ...result } = user;
-      return result;
+      delete user.password;
+      return user;
     }
     return null;
   }

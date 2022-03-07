@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { generateMockRepository } from '../share/test-support';
@@ -30,8 +31,36 @@ describe('UsersService', () => {
         password: 'testpass',
       };
       userRepository.findOne.mockResolvedValue(mockUser);
-      const result = await service.findByName(mockUser.name, mockUser.password);
+      const result = await service.findByNameAndPassword(
+        mockUser.name,
+        mockUser.password,
+      );
       expect(result).toEqual(mockUser);
+    });
+  });
+  describe('createUser', () => {
+    it('create user', async () => {
+      const mockUser = {
+        name: 'test',
+        password: 'password',
+      };
+      userRepository.save.mockResolvedValue(null);
+      userRepository.find.mockResolvedValue([]);
+      const result = await service.createUser(mockUser);
+      expect(result.name).toEqual(mockUser.name);
+      expect(result).not.toHaveProperty('password');
+    });
+
+    it('raise exception if user already exists', async () => {
+      const mockUser = {
+        name: 'test',
+        password: 'password',
+      };
+      userRepository.save.mockResolvedValue(null);
+      userRepository.find.mockResolvedValue([mockUser]);
+      expect(service.createUser(mockUser)).rejects.toThrowError(
+        BadRequestException,
+      );
     });
   });
 });

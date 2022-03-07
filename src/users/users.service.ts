@@ -9,9 +9,15 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async findByName(name: string): Promise<User | undefined> {
+  async findByName(name: string, password: string): Promise<User | undefined> {
     return this.userRepository.findOne({
       name,
+      password: this.hashPassword(password),
     });
+  }
+  private hashPassword(password: string): string {
+    const sha512 = createHash('sha512');
+    sha512.update(password);
+    return sha512.digest('hex');
   }
 }

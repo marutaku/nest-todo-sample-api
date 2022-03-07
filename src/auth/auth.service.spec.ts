@@ -43,10 +43,5 @@ describe('AuthService', () => {
       );
       expect(result).toBeNull();
     });
-    it('password not match', async () => {
-      mockUserService.findByName.mockResolvedValue(mockUser);
-      const result = await service.validateUser(mockUser.name, '');
-      expect(result).toBeNull();
-    });
   });
 });

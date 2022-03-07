@@ -25,13 +25,12 @@ describe('UsersService', () => {
 
   describe('findOne', () => {
     it('find user by username', async () => {
-      const mockUserName = 'test';
       const mockUser = {
-        name: mockUserName,
+        name: 'test',
         password: 'testpass',
       };
       userRepository.findOne.mockResolvedValue(mockUser);
-      const result = await service.findByName(mockUserName);
+      const result = await service.findByName(mockUser.name, mockUser.password);
       expect(result).toEqual(mockUser);
     });
   });

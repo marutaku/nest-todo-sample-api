@@ -1,9 +1,12 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { generateMockRepository } from '../share/test-support';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
+
+const generateMockUser = (userProps = {}) =>
+  Object.assign({ name: 'test', password: 'password' }, userProps);
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -24,7 +27,7 @@ describe('UsersService', () => {
     userRepository = module.get(getRepositoryToken(User));
   });
 
-  describe('findOne', () => {
+  describe('findUserByNameAndPassword', () => {
     it('find user by username', async () => {
       const mockUser = {
         name: 'test',
@@ -38,12 +41,26 @@ describe('UsersService', () => {
       expect(result).toEqual(mockUser);
     });
   });
+
+  describe('findUserById', () => {
+    it('find user by id', async () => {
+      const mockUserId = 1;
+      const mockUser = generateMockUser();
+      userRepository.findOne.mockResolvedValue(mockUser);
+      const result = await service.findUserById(mockUserId);
+      expect(userRepository.findOne).toBeCalledWith(mockUserId);
+      expect(result).toEqual(mockUser);
+    });
+
+    it('user not found', async () => {
+      userRepository.findOne.mockResolvedValue(undefined);
+      expect(service.findUserById(1)).rejects.toThrowError(NotFoundException);
+    });
+  });
+
   describe('createUser', () => {
     it('create user', async () => {
-      const mockUser = {
-        name: 'test',
-        password: 'password',
-      };
+      const mockUser = generateMockUser();
       userRepository.save.mockResolvedValue(null);
       userRepository.find.mockResolvedValue([]);
       const result = await service.createUser(mockUser);
@@ -52,10 +69,7 @@ describe('UsersService', () => {
     });
 
     it('raise exception if user already exists', async () => {
-      const mockUser = {
-        name: 'test',
-        password: 'password',
-      };
+      const mockUser = generateMockUser();
       userRepository.save.mockResolvedValue(null);
       userRepository.find.mockResolvedValue([mockUser]);
       expect(service.createUser(mockUser)).rejects.toThrowError(

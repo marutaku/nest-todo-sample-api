@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,6 +24,14 @@ export class UsersService {
       name,
       password: this.hashPassword(password),
     });
+  }
+
+  async findUserById(userId: number): Promise<User> {
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+    return user;
   }
 
   async createUser(userProperty: UserDto): Promise<User> {

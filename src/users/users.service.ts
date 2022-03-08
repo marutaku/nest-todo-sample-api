@@ -46,7 +46,6 @@ export class UsersService {
     user.password = this.hashPassword(userProperty.password);
     try {
       await this.userRepository.save(user);
-      delete user.password;
       return user;
     } catch (e) {
       throw new InternalServerErrorException();

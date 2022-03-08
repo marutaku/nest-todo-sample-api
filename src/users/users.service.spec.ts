@@ -65,7 +65,6 @@ describe('UsersService', () => {
       userRepository.find.mockResolvedValue([]);
       const result = await service.createUser(mockUser);
       expect(result.name).toEqual(mockUser.name);
-      expect(result).not.toHaveProperty('password');
     });
 
     it('raise exception if user already exists', async () => {

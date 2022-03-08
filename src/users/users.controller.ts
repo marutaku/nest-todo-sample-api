@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Inject,
@@ -9,6 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UserDto } from './user.dto';
+import { User } from './user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -17,12 +19,19 @@ export class UsersController {
 
   @Get(':id')
   async findUserById(@Param('id', ParseIntPipe) userId: number) {
-    return this.usersService.findUserById(userId);
+    const user = await this.usersService.findUserById(userId);
+    return this.sanitizeUser(user);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  async createUser(userProperty: UserDto) {
-    return this.usersService.createUser(userProperty);
+  async createUser(@Body() userProperty: UserDto) {
+    const user = await this.usersService.createUser(userProperty);
+    return this.sanitizeUser(user);
+  }
+
+  private sanitizeUser(user: User): User {
+    delete user.password;
+    return user;
   }
 }

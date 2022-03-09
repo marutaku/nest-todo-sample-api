@@ -18,7 +18,7 @@ export class UsersController {
   constructor(@Inject(UsersService) private usersService: UsersService) {}
 
   @Get(':id')
-  async findUserById(@Param('id', ParseUUIDPipe) userId: number) {
+  async findUserById(@Param('id', ParseUUIDPipe) userId: string) {
     const user = await this.usersService.findUserById(userId);
     return this.sanitizeUser(user);
   }

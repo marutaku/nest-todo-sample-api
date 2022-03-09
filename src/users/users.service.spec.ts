@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { generateMockRepository } from '../share/test-support';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
+import { randomUUID } from 'crypto';
 
 const generateMockUser = (userProps = {}) =>
   Object.assign({ name: 'test', password: 'password' }, userProps);
@@ -44,7 +45,7 @@ describe('UsersService', () => {
 
   describe('findUserById', () => {
     it('find user by id', async () => {
-      const mockUserId = 1;
+      const mockUserId = randomUUID();
       const mockUser = generateMockUser();
       userRepository.findOne.mockResolvedValue(mockUser);
       const result = await service.findUserById(mockUserId);
@@ -54,7 +55,9 @@ describe('UsersService', () => {
 
     it('user not found', async () => {
       userRepository.findOne.mockResolvedValue(undefined);
-      expect(service.findUserById(1)).rejects.toThrowError(NotFoundException);
+      expect(service.findUserById(randomUUID())).rejects.toThrowError(
+        NotFoundException,
+      );
     });
   });
 

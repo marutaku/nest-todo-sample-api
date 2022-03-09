@@ -4,7 +4,7 @@ import {
   Get,
   Inject,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   UsePipes,
   ValidationPipe,
@@ -18,7 +18,7 @@ export class UsersController {
   constructor(@Inject(UsersService) private usersService: UsersService) {}
 
   @Get(':id')
-  async findUserById(@Param('id', ParseIntPipe) userId: number) {
+  async findUserById(@Param('id', ParseUUIDPipe) userId: number) {
     const user = await this.usersService.findUserById(userId);
     return this.sanitizeUser(user);
   }

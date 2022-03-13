@@ -1,23 +1,26 @@
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 
 const mockUser = { name: 'test', password: 'testpass' };
 
-const mockUserService = {
-  findByNameAndPassword: jest.fn(),
-};
+const mockUsersService = { findByNameAndPassword: jest.fn() };
 
 describe('AuthService', () => {
   let service: AuthService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
+    module = await Test.createTestingModule({
+      providers: [
+        AuthService,
+        { provide: JwtService, useValue: { sign: jest.fn() } },
+      ],
     })
       .useMocker((token) => {
         if (token === UsersService) {
-          return mockUserService;
+          return mockUsersService;
         }
       })
       .compile();
@@ -27,7 +30,7 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('validate user succeeded', async () => {
-      mockUserService.findByNameAndPassword.mockResolvedValue(mockUser);
+      mockUsersService.findByNameAndPassword.mockResolvedValue(mockUser);
       const result = await service.validateUser(
         mockUser.name,
         mockUser.password,
@@ -36,7 +39,7 @@ describe('AuthService', () => {
       expect(result).not.toHaveProperty('password');
     });
     it('user not found', async () => {
-      mockUserService.findByNameAndPassword.mockResolvedValue(undefined);
+      mockUsersService.findByNameAndPassword.mockResolvedValue(undefined);
       const result = await service.validateUser(
         mockUser.name,
         mockUser.password,

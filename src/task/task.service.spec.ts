@@ -12,10 +12,6 @@ const mockBoard = {
   description: 'board description',
 };
 
-const mockBoardService = {
-  getBoardById: jest.fn().mockResolvedValue(mockBoard),
-};
-
 const generateMockTask = (mock = {}) => {
   return Object.assign(
     {
@@ -41,14 +37,14 @@ describe('TasksService', () => {
           provide: getRepositoryToken(Task),
           useFactory: generateMockRepository,
         },
+        {
+          provide: BoardsService,
+          useValue: {
+            getBoardById: jest.fn().mockResolvedValue(mockBoard),
+          },
+        },
       ],
-    })
-      .useMocker((token) => {
-        if (token === BoardsService) {
-          return mockBoardService;
-        }
-      })
-      .compile();
+    }).compile();
 
     tasksService = await module.get<TasksService>(TasksService);
     taskRepository = await module.get(getRepositoryToken(Task));

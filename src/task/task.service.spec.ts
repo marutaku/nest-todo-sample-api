@@ -1,26 +1,15 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BoardsService } from '../../src/boards/boards.service';
+import { BoardsService } from '../boards/boards.service';
+import { generateMockRepository } from '../share/test-support';
 import { Task } from './task.entity';
 import { TasksService } from './task.service';
-
-// TODO: DRYではないので，どこかで共通化したい
-const mockRepository = () => ({
-  find: jest.fn(),
-  findOne: jest.fn(),
-  save: jest.fn(),
-  delete: jest.fn(),
-});
 
 const mockBoard = {
   id: 1,
   name: 'mock board',
   description: 'board description',
-};
-
-const mockBoardService = {
-  getBoardById: jest.fn().mockResolvedValue(mockBoard),
 };
 
 const generateMockTask = (mock = {}) => {
@@ -44,15 +33,18 @@ describe('TasksService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TasksService,
-        { provide: getRepositoryToken(Task), useFactory: mockRepository },
+        {
+          provide: getRepositoryToken(Task),
+          useFactory: generateMockRepository,
+        },
+        {
+          provide: BoardsService,
+          useValue: {
+            getBoardById: jest.fn().mockResolvedValue(mockBoard),
+          },
+        },
       ],
-    })
-      .useMocker((token) => {
-        if (token === BoardsService) {
-          return mockBoardService;
-        }
-      })
-      .compile();
+    }).compile();
 
     tasksService = await module.get<TasksService>(TasksService);
     taskRepository = await module.get(getRepositoryToken(Task));

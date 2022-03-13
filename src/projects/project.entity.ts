@@ -7,26 +7,23 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Project } from '../projects/project.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
-export class User {
+export class Project {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
 
-  @Column()
-  password: string;
-
-  @ManyToMany(() => Project)
+  @ManyToMany(() => User)
   @JoinTable()
-  projects: Project[];
+  users: User[];
 
   @CreateDateColumn()
-  readonly createdAt: Date;
+  ceatedAt: Date;
 
   @UpdateDateColumn()
-  readonly updatedAt: Date;
+  updatedat: Date;
 }

@@ -52,6 +52,10 @@ export class UsersService {
     }
   }
 
+  async fetchProjectsUserJoined(userId: string) {
+    return (await this.userRepository.findOne(userId)).projects;
+  }
+
   private hashPassword(password: string): string {
     const sha512 = createHash('sha512');
     sha512.update(password);

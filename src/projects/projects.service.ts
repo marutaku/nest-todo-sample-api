@@ -18,7 +18,7 @@ export class ProjectsService {
   ) {}
 
   async fetchUsersInProject(projectId: string) {
-    return (await this.projectRepository.findOne(projectId)).users;
+    return (await this.findProjectById(projectId)).users;
   }
 
   async createProject(projectProps: ProjectDto, userId: string) {

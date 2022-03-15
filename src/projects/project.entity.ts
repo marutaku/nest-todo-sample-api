@@ -24,14 +24,14 @@ export class Project {
 
   @ManyToMany(() => User, (user) => user.projects)
   @JoinTable()
-  users: User[];
+  users: User[] = [];
 
   @OneToMany(() => Board, (board) => board.project)
   boards: Board[];
 
   @CreateDateColumn()
-  ceatedAt: Date;
+  readonly ceatedAt: Date;
 
   @UpdateDateColumn()
-  updatedat: Date;
+  readonly updatedat: Date;
 }

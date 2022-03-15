@@ -22,7 +22,7 @@ export class User {
 
   @ManyToMany(() => Project, (project) => project.users)
   @JoinTable()
-  projects: Project[];
+  projects: Project[] = [];
 
   @CreateDateColumn()
   readonly createdAt: Date;

@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { generateMockRepository } from '../share/test-support';
+import { useMockRepositoryProvider } from '../share/test-support';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { randomUUID } from 'crypto';
@@ -15,13 +15,7 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        {
-          provide: getRepositoryToken(User),
-          useFactory: generateMockRepository,
-        },
-      ],
+      providers: [UsersService, useMockRepositoryProvider(User)],
     }).compile();
 
     service = module.get<UsersService>(UsersService);

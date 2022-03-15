@@ -17,6 +17,9 @@ export class ProjectsService {
     @Inject(UsersService) private userService: UsersService,
   ) {}
 
+  /**
+   * プロジェクトに参加しているユーザを返す
+   */
   async fetchUsersInProject(projectId: string) {
     return (await this.findProjectById(projectId)).users;
   }
@@ -26,7 +29,7 @@ export class ProjectsService {
     const project = new Project();
     project.name = projectProps.name;
     project.description = projectProps.description;
-    project.users.push(user);
+    project.users = [user];
     const { id: projectId } = await this.projectRepository.save(project);
     project.id = projectId;
     return project;

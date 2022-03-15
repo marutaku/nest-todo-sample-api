@@ -8,7 +8,7 @@ import { BoardsModule } from './boards/boards.module';
 import { TypeOrmConfigService } from 'config/typeorm-config.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { ProjectsService } from './projects/projects.service';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -26,8 +26,9 @@ import { ProjectsService } from './projects/projects.service';
     BoardsModule,
     AuthModule,
     UsersModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ProjectsService],
+  providers: [AppService],
 })
 export class AppModule {}

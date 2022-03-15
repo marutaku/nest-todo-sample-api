@@ -24,7 +24,7 @@ export class Project {
 
   @ManyToMany(() => User, (user) => user.projects)
   @JoinTable()
-  users: User[] = [];
+  users: User[];
 
   @OneToMany(() => Board, (board) => board.project)
   boards: Board[];

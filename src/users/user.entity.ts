@@ -21,7 +21,6 @@ export class User {
   password: string;
 
   @ManyToMany(() => Project, (project) => project.users)
-  @JoinTable()
   projects: Project[];
 
   @CreateDateColumn()

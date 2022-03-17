@@ -87,6 +87,7 @@ describe('TasksService', () => {
         mockTask,
         mockBoardId,
         'test-project',
+        'testuser',
       );
       expect(taskRepository.save).toHaveBeenCalled();
       expect(result).toEqual({

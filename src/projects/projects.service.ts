@@ -52,7 +52,6 @@ export class ProjectsService {
   async addUserInProject(projectId: string, userId: string) {
     const user = await this.userService.findUserById(userId);
     const project = await this.findProjectById(projectId, userId);
-    console.log(project.users);
     if (project.users.some((user) => user.id === userId)) {
       throw new BadRequestException('User already join the project');
     }

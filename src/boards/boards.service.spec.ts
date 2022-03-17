@@ -11,6 +11,7 @@ const mockProject = {
   name: 'mock-project',
   description: 'mock-project',
 };
+const mockUserId = 'test';
 const generateMockBoard = (customProperties = {}) =>
   Object.assign(
     {
@@ -46,7 +47,10 @@ describe('BoardsService', () => {
       it('get all board', async () => {
         const mockBoard = generateMockBoard();
         boardRepository.find.mockResolvedValue([mockBoard]);
-        const result = await boardsService.getBoards(mockProject.id);
+        const result = await boardsService.getBoards(
+          mockProject.id,
+          mockUserId,
+        );
         expect(boardRepository.find).toHaveBeenCalled();
         expect(result).toEqual([mockBoard]);
       });
@@ -57,7 +61,11 @@ describe('BoardsService', () => {
       it('get board by id', async () => {
         const mockBoard = generateMockBoard();
         boardRepository.findOne.mockResolvedValue(mockBoard);
-        const result = await boardsService.getBoardById(mockProject.id, mockId);
+        const result = await boardsService.getBoardById(
+          mockProject.id,
+          mockId,
+          mockUserId,
+        );
         expect(boardRepository.findOne).toHaveBeenCalled();
         expect(result).toEqual(mockBoard);
       });
@@ -65,7 +73,7 @@ describe('BoardsService', () => {
       it('raise error if not found', async () => {
         boardRepository.findOne.mockResolvedValue(null);
         expect(
-          boardsService.getBoardById(mockProject.id, mockId),
+          boardsService.getBoardById(mockProject.id, mockId, mockUserId),
         ).rejects.toThrowError(NotFoundException);
       });
     });
@@ -77,6 +85,7 @@ describe('BoardsService', () => {
         const result = await boardsService.createBoard(
           mockProject.id,
           mockBoard,
+          mockUserId,
         );
         expect(boardRepository.save).toHaveBeenCalled();
         expect(result).toEqual(mockBoard);
@@ -92,6 +101,7 @@ describe('BoardsService', () => {
           mockProject.id,
           1,
           mockBoard,
+          mockUserId,
         );
         expect(boardRepository.save).toHaveBeenCalled();
         expect(result).toEqual(mockBoard);
@@ -101,14 +111,14 @@ describe('BoardsService', () => {
     describe('deleteBoard', () => {
       it('delete board', async () => {
         boardRepository.delete.mockResolvedValue({ affected: 1 });
-        await boardsService.deleteBoard(mockProject.id, 1);
+        await boardsService.deleteBoard(mockProject.id, 1, mockUserId);
         expect(boardRepository.delete).toHaveBeenCalled();
       });
 
       it('board not found', async () => {
         boardRepository.delete.mockResolvedValue({ affected: null });
         expect(
-          boardsService.deleteBoard(mockProject.id, 1),
+          boardsService.deleteBoard(mockProject.id, 1, mockUserId),
         ).rejects.toThrowError(NotFoundException);
       });
     });

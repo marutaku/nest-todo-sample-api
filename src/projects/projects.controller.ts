@@ -21,9 +21,20 @@ export class ProjectsController {
     @Inject(ProjectsService) private projectService: ProjectsService,
   ) {}
 
+  @Get(':projectId')
+  fetchProjectById(
+    @Req() req: RequestWithJwtInfo,
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+  ) {
+    return this.projectService.findProjectById(projectId, req.user.id);
+  }
+
   @Get(':projectId/users')
-  fetchUserInProject(@Param('projectId', ParseUUIDPipe) projectId: string) {
-    return this.projectService.fetchUsersInProject(projectId);
+  fetchUserInProject(
+    @Req() req: RequestWithJwtInfo,
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+  ) {
+    return this.projectService.fetchUsersInProject(projectId, req.user.id);
   }
 
   @Post('')
@@ -37,10 +48,15 @@ export class ProjectsController {
 
   @Put(':projectId')
   updateProject(
+    @Req() req: RequestWithJwtInfo,
     @Body() projectProps: Partial<ProjectDto>,
     @Param('projectId', ParseUUIDPipe) projectId: string,
   ) {
-    return this.projectService.updateProject(projectId, projectProps);
+    return this.projectService.updateProject(
+      projectId,
+      projectProps,
+      req.user.id,
+    );
   }
 
   @Post(':projectId/join')

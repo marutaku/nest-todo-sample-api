@@ -10,12 +10,15 @@ import {
   ValidationPipe,
   Inject,
   Put,
+  ParseUUIDPipe,
+  Req,
 } from '@nestjs/common';
+import { RequestWithJwtInfo } from '../share/request';
 import { TaskDto } from './task.dto';
 import { TaskStatusPipe } from './task.pipe';
 import { TasksService } from './task.service';
 
-@Controller('/boards/:boardId/tasks')
+@Controller('/projects/:projectId/boards/:boardId/tasks')
 export class TaskController {
   constructor(@Inject(TasksService) private tasksService: TasksService) {}
   @Get()
@@ -36,8 +39,15 @@ export class TaskController {
   createTask(
     @Body() taskDto: TaskDto,
     @Param('boardId', ParseIntPipe) boardId: number,
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+    @Req() req: RequestWithJwtInfo,
   ) {
-    return this.tasksService.createTask(taskDto, boardId);
+    return this.tasksService.createTask(
+      taskDto,
+      boardId,
+      projectId,
+      req.user.id,
+    );
   }
 
   @Delete('/:id')

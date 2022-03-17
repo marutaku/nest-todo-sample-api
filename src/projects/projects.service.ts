@@ -3,6 +3,8 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  NotAcceptableException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,8 +22,8 @@ export class ProjectsService {
   /**
    * プロジェクトに参加しているユーザを返す
    */
-  async fetchUsersInProject(projectId: string) {
-    return (await this.findProjectById(projectId)).users;
+  async fetchUsersInProject(projectId: string, userId: string) {
+    return (await this.findProjectById(projectId, userId)).users;
   }
 
   async createProject(projectProps: ProjectDto, userId: string) {
@@ -35,8 +37,12 @@ export class ProjectsService {
     return project;
   }
 
-  async updateProject(projectId: string, projectProps: Partial<ProjectDto>) {
-    const project = await this.findProjectById(projectId);
+  async updateProject(
+    projectId: string,
+    projectProps: Partial<ProjectDto>,
+    userId: string,
+  ) {
+    const project = await this.findProjectById(projectId, userId);
     project.name = projectProps.name || project.name;
     project.description = projectProps.description || project.description;
     await this.projectRepository.save(project);
@@ -45,7 +51,8 @@ export class ProjectsService {
 
   async addUserInProject(projectId: string, userId: string) {
     const user = await this.userService.findUserById(userId);
-    const project = await this.findProjectById(projectId);
+    const project = await this.findProjectById(projectId, userId);
+    console.log(project.users);
     if (project.users.some((user) => user.id === userId)) {
       throw new BadRequestException('User already join the project');
     }
@@ -54,10 +61,15 @@ export class ProjectsService {
     return project;
   }
 
-  async findProjectById(projectId: string) {
-    const project = await this.projectRepository.findOne(projectId);
+  async findProjectById(projectId: string, userId: string) {
+    const project = await this.projectRepository.findOne(projectId, {
+      relations: ['users'],
+    });
+
     if (!project) {
       throw new NotFoundException('project not found');
+    } else if (!project.users.some((user) => user.id === userId)) {
+      throw new UnauthorizedException('Unauthorize');
     }
     return project;
   }

@@ -1,19 +1,21 @@
 import {
   CanActivate,
   ExecutionContext,
-  UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
-import { Project } from '../projects/project.entity';
 
-export class ProjectGuard implements CanActivate {
+import { Project } from '../projects/project.entity';
+import { Board } from './board.entity';
+
+export class BoardsGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const project: Project = request.project;
-    const userId = request.user.id;
-    if (project.users.some((u) => u.id === userId)) {
+    const board: Board = request.board;
+    console.log(board);
+    if (board.project.id === project.id) {
       return true;
-    } else {
-      throw new UnauthorizedException('Access denied');
     }
+    throw new NotFoundException('Board not found');
   }
 }

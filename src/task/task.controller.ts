@@ -10,12 +10,16 @@ import {
   ValidationPipe,
   Inject,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { BoardsGuard } from '../boards/boards.guard';
+import { ProjectGuard } from '../share/project.guard';
 import { TaskDto } from './task.dto';
 import { TaskStatusPipe } from './task.pipe';
 import { TasksService } from './task.service';
 
 @Controller('/projects/:projectId/boards/:boardId/tasks')
+@UseGuards(ProjectGuard, BoardsGuard)
 export class TaskController {
   constructor(@Inject(TasksService) private tasksService: TasksService) {}
   @Get()

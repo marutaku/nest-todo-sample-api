@@ -17,10 +17,13 @@ export class BoardsService {
     return this.boardRepository.find({ project: project });
   }
 
-  async getBoardById(boardId: number): Promise<Board> {
-    const board = await this.boardRepository.findOne({
-      id: boardId,
-    });
+  async getBoardById(boardId: number, withProject = false): Promise<Board> {
+    const board = await this.boardRepository.findOne(
+      {
+        id: boardId,
+      },
+      { relations: withProject ? ['project'] : [] },
+    );
     if (!board) {
       throw new NotFoundException('board not found');
     }
@@ -33,8 +36,8 @@ export class BoardsService {
     board.name = boardProps.name;
     board.description = boardProps.description;
     board.project = project;
-    const result = await this.boardRepository.save(board);
-    return result;
+    await this.boardRepository.save(board);
+    return board;
   }
 
   async updateBoard(

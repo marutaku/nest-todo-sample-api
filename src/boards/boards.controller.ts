@@ -13,16 +13,16 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ProjectGuards } from '../share/project.guard';
+import { ProjectGuard } from '../share/project.guard';
 import { BoardDto } from './board.dto';
 import { BoardsService } from './boards.service';
 
 @Controller('/projects/:projectId/boards')
+@UseGuards(ProjectGuard)
 export class BoardsController {
   constructor(@Inject(BoardsService) private boardsService: BoardsService) {}
 
   @Get()
-  @UseGuards(ProjectGuards)
   getBoards(@Param('projectId', ParseUUIDPipe) projectId: string) {
     return this.boardsService.getBoards(projectId);
   }

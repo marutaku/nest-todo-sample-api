@@ -13,17 +13,16 @@ export class BoardsService {
   ) {}
 
   async getBoards(projectId: string): Promise<Board[]> {
-    const project = await this.projectService.findProjectById(projectId);
-    return this.boardRepository.find({ project: project });
+    return this.boardRepository.find({ where: { project: { id: projectId } } });
   }
 
   async getBoardById(boardId: number, withProject = false): Promise<Board> {
-    const board = await this.boardRepository.findOne(
-      {
+    const board = await this.boardRepository.findOne({
+      where: {
         id: boardId,
       },
-      { relations: withProject ? ['project'] : [] },
-    );
+      relations: withProject ? ['project'] : [],
+    });
     if (!board) {
       throw new NotFoundException('board not found');
     }

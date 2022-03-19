@@ -64,9 +64,28 @@ export class TasksService {
     }
   }
 
-  async updateTask(id: number, status: string, boardId: number): Promise<Task> {
+  async updateTaskStatus(
+    id: number,
+    status: string,
+    boardId: number,
+  ): Promise<Task> {
     const task = await this.getTaskById(id, boardId);
     task.status = status;
+    await this.taskRepository.save(task);
+    return task;
+  }
+
+  async updateTask(
+    id: number,
+    boardId: number,
+    taskProperty: Partial<TaskDto>,
+  ) {
+    const task = await this.getTaskById(id, boardId);
+    task.title = taskProperty.title || task.title;
+    task.description = taskProperty.description || task.description;
+    task.deadline = taskProperty.deadline
+      ? new Date(Date.parse(taskProperty.deadline))
+      : task.deadline;
     await this.taskRepository.save(task);
     return task;
   }

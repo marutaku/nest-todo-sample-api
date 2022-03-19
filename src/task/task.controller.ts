@@ -52,12 +52,21 @@ export class TaskController {
     return this.tasksService.deleteTask(id, boardId);
   }
 
-  @Put('/:id')
-  updateTask(
+  @Put('/:id/status')
+  updateStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusPipe) status: string,
     @Param('boardId', ParseIntPipe) boardId: number,
   ) {
-    return this.tasksService.updateTask(id, status, boardId);
+    return this.tasksService.updateTaskStatus(id, status, boardId);
+  }
+
+  @Put('/:id/')
+  updateTask(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('boardId', ParseIntPipe) boardId: number,
+    @Body() taskProperty: Partial<TaskDto>,
+  ) {
+    return this.tasksService.updateTask(id, boardId, taskProperty);
   }
 }

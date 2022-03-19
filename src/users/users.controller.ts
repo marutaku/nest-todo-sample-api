@@ -9,6 +9,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { Public } from '../share/public.decorator';
 import { UserDto } from './user.dto';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
@@ -23,6 +24,7 @@ export class UsersController {
     return this.sanitizeUser(user);
   }
 
+  @Public()
   @Post()
   @UsePipes(ValidationPipe)
   async createUser(@Body() userProperty: UserDto) {

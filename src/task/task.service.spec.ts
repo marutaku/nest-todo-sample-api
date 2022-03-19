@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BoardsService } from '../boards/boards.service';
-import { generateMockRepository } from '../share/test-support';
+import { useMockRepositoryProvider } from '../share/test-support';
 import { Task } from './task.entity';
 import { TasksService } from './task.service';
 
@@ -33,10 +33,7 @@ describe('TasksService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TasksService,
-        {
-          provide: getRepositoryToken(Task),
-          useFactory: generateMockRepository,
-        },
+        useMockRepositoryProvider(Task),
         {
           provide: BoardsService,
           useValue: {

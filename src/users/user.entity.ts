@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Project } from '../projects/project.entity';
 
 @Entity()
 export class User {
@@ -14,8 +16,11 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
+
+  @ManyToMany(() => Project, (project) => project.users)
+  projects: Project[];
 
   @CreateDateColumn()
   readonly createdAt: Date;

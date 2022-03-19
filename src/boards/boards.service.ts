@@ -36,8 +36,9 @@ export class BoardsService {
     board.name = boardProps.name;
     board.description = boardProps.description;
     board.project = project;
-    await this.boardRepository.save(board);
-    return board;
+    const result = await this.boardRepository.save(board);
+    delete result.project;
+    return result;
   }
 
   async updateBoard(

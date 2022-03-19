@@ -1,16 +1,16 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ProjectsService } from '../projects/projects.service';
+import { useMockRepositoryProvider } from '../share/test-support';
 import { Board } from './board.entity';
 import { BoardsService } from './boards.service';
 
-// TODO: DRYではないので，どこかで共通化したい
-const mockRepository = () => ({
-  find: jest.fn(),
-  findOne: jest.fn(),
-  save: jest.fn(),
-  delete: jest.fn(),
-});
+const mockProject = {
+  id: 'test',
+  name: 'mock-project',
+  description: 'mock-project',
+};
 
 const generateMockBoard = (customProperties = {}) =>
   Object.assign(
@@ -27,11 +27,16 @@ describe('BoardsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BoardsService,
-        { provide: getRepositoryToken(Board), useFactory: mockRepository },
-      ],
-    }).compile();
+      providers: [BoardsService, useMockRepositoryProvider(Board)],
+    })
+      .useMocker((token) => {
+        if (token === ProjectsService) {
+          return {
+            findProjectById: jest.fn().mockResolvedValue(mockProject),
+          };
+        }
+      })
+      .compile();
 
     boardsService = module.get<BoardsService>(BoardsService);
     boardRepository = module.get(getRepositoryToken(Board));
@@ -42,7 +47,7 @@ describe('BoardsService', () => {
       it('get all board', async () => {
         const mockBoard = generateMockBoard();
         boardRepository.find.mockResolvedValue([mockBoard]);
-        const result = await boardsService.getBoards();
+        const result = await boardsService.getBoards(mockProject.id);
         expect(boardRepository.find).toHaveBeenCalled();
         expect(result).toEqual([mockBoard]);
       });
@@ -70,7 +75,10 @@ describe('BoardsService', () => {
       it('create board', async () => {
         const mockBoard = generateMockBoard();
         boardRepository.save.mockResolvedValue(mockBoard);
-        const result = await boardsService.createBoard(mockBoard);
+        const result = await boardsService.createBoard(
+          mockProject.id,
+          mockBoard,
+        );
         expect(boardRepository.save).toHaveBeenCalled();
         expect(result).toEqual(mockBoard);
       });

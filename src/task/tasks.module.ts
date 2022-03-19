@@ -1,14 +1,27 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Board } from 'src/boards/board.entity';
-import { BoardsService } from 'src/boards/boards.service';
+import { Board } from '../boards/board.entity';
+import { BoardsMiddleware } from '../boards/boards.middleware';
+import { BoardsModule } from '../boards/boards.module';
+import { ProjectsMiddleware } from '../projects/projects.middleware';
+import { ProjectsModule } from '../projects/projects.module';
 import { TaskController } from './task.controller';
 import { Task } from './task.entity';
 import { TasksService } from './task.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task, Board])],
+  imports: [
+    TypeOrmModule.forFeature([Task, Board]),
+    BoardsModule,
+    ProjectsModule,
+  ],
   controllers: [TaskController],
-  providers: [TasksService, BoardsService],
+  providers: [TasksService],
 })
-export class TasksModule {}
+export class TasksModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ProjectsMiddleware, BoardsMiddleware)
+      .forRoutes(TaskController);
+  }
+}

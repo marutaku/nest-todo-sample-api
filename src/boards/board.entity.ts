@@ -5,7 +5,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   Timestamp,
+  ManyToOne,
 } from 'typeorm';
+import { Project } from '../projects/project.entity';
 
 @Entity()
 export class Board {
@@ -19,6 +21,9 @@ export class Board {
 
   @Column({ nullable: true })
   description: string;
+
+  @ManyToOne(() => Project, (project) => project.boards)
+  project: Project;
 
   @CreateDateColumn()
   readonly createdAt?: Timestamp;

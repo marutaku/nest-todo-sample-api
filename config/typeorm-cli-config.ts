@@ -1,9 +1,9 @@
-import { ConnectionOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 import { config as loadConfig } from 'dotenv';
 
 loadConfig({ path: '.env/default.env', debug: true });
 
-const ormconfig: ConnectionOptions = {
+const ormconfig: DataSourceOptions = {
   type: 'postgres',
   host: process.env.DB_HOSTNAME,
   port: parseInt(process.env.DB_PORT, 10),

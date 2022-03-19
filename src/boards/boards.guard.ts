@@ -12,7 +12,6 @@ export class BoardsGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const project: Project = request.project;
     const board: Board = request.board;
-    console.log(board);
     if (board.project.id === project.id) {
       return true;
     }

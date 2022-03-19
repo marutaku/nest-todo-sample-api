@@ -94,14 +94,41 @@ describe('TasksService', () => {
       });
     });
   });
+
   describe('updateTask', () => {
     it('update task', async () => {
+      const mockProperty = {
+        title: 'updated title',
+        description: 'new description',
+      };
+      tasksService.getTaskById = jest
+        .fn()
+        .mockResolvedValue(generateMockTask());
+      expect(tasksService.getTaskById).not.toHaveBeenCalled();
+      const result = await tasksService.updateTask(
+        1,
+        mockBoardId,
+        mockProperty,
+      );
+      expect(tasksService.getTaskById).toHaveBeenCalled();
+      expect(taskRepository.save).toHaveBeenCalled();
+      expect(result.title).toEqual(mockProperty.title);
+      expect(result.description).toEqual(mockProperty.description);
+    });
+  });
+
+  describe('updateTaskStatus', () => {
+    it('update task status', async () => {
       const mockStatus = 'DONE';
       tasksService.getTaskById = jest
         .fn()
         .mockResolvedValue(generateMockTask({ status: 'OPEN' }));
       expect(tasksService.getTaskById).not.toHaveBeenCalled();
-      const result = await tasksService.updateTask(1, mockStatus, mockBoardId);
+      const result = await tasksService.updateTaskStatus(
+        1,
+        mockStatus,
+        mockBoardId,
+      );
       expect(tasksService.getTaskById).toHaveBeenCalled();
       expect(taskRepository.save).toHaveBeenCalled();
       expect(result.status).toEqual(mockStatus);

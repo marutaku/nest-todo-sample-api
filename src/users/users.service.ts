@@ -21,13 +21,15 @@ export class UsersService {
     password: string,
   ): Promise<User | undefined> {
     return this.userRepository.findOne({
-      name,
-      password: this.hashPassword(password),
+      where: {
+        name,
+        password: this.hashPassword(password),
+      },
     });
   }
 
   async findUserById(userId: string): Promise<User> {
-    const user = await this.userRepository.findOne(userId);
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException('user not found');
     }
@@ -36,7 +38,9 @@ export class UsersService {
 
   async createUser(userProperty: UserDto): Promise<User> {
     const existsUser = await this.userRepository.find({
-      name: userProperty.name,
+      where: {
+        name: userProperty.name,
+      },
     });
     if (existsUser.length !== 0) {
       throw new BadRequestException('user already exists');
@@ -53,7 +57,8 @@ export class UsersService {
   }
 
   async fetchProjectsUserJoined(userId: string) {
-    return (await this.userRepository.findOne(userId)).projects;
+    return (await this.userRepository.findOne({ where: { id: userId } }))
+      .projects;
   }
 
   private hashPassword(password: string): string {

@@ -19,9 +19,12 @@ import { ProjectsService } from './projects.service';
 })
 export class ProjectsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ProjectsMiddleware).forRoutes({
-      path: '/projects/*+',
-      method: RequestMethod.ALL,
-    });
+    consumer
+      .apply(ProjectsMiddleware)
+      .exclude({
+        path: 'projects',
+        method: RequestMethod.POST,
+      })
+      .forRoutes(ProjectsController);
   }
 }

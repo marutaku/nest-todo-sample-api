@@ -18,13 +18,15 @@ export class TasksService {
   ) {}
 
   async getTasks(boardId: number): Promise<Task[]> {
-    return this.taskRepository.find({ board: { id: boardId } });
+    return this.taskRepository.find({ where: { board: { id: boardId } } });
   }
 
   async getTaskById(taskId: number, boardId: number): Promise<Task> {
     const task = await this.taskRepository.findOne({
-      id: taskId,
-      board: { id: boardId },
+      where: {
+        id: taskId,
+        board: { id: boardId },
+      },
     });
     if (!task) {
       throw new NotFoundException();

@@ -43,7 +43,9 @@ describe('UsersService', () => {
       const mockUser = generateMockUser();
       userRepository.findOne.mockResolvedValue(mockUser);
       const result = await service.findUserById(mockUserId);
-      expect(userRepository.findOne).toBeCalledWith(mockUserId);
+      expect(userRepository.findOne).toBeCalledWith({
+        where: { id: mockUserId },
+      });
       expect(result).toEqual(mockUser);
     });
 

@@ -55,7 +55,10 @@ export class ProjectsService {
   }
 
   async findProjectById(projectId: string) {
-    const project = await this.projectRepository.findOne(projectId, {
+    const project = await this.projectRepository.findOne({
+      where: {
+        id: projectId,
+      },
       relations: ['users'],
     });
 

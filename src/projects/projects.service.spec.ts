@@ -76,7 +76,10 @@ describe('ProjectsService', () => {
     it('fetch joined users', async () => {
       mockRepository.findOne.mockResolvedValue(mockProject);
       const result = await service.fetchUsersInProject(mockProject.id);
-      expect(mockRepository.findOne).toBeCalledWith(mockProject.id, {
+      expect(mockRepository.findOne).toBeCalledWith({
+        where: {
+          id: mockProject.id,
+        },
         relations: ['users'],
       });
       expect(result).toEqual(mockProject.users);

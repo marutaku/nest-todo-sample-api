@@ -9,11 +9,11 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { RequestWithJwtInfo } from '../share/request';
+import { ProjectGuards } from '../share/project.guard';
 import { BoardDto } from './board.dto';
 import { BoardsService } from './boards.service';
 
@@ -22,20 +22,14 @@ export class BoardsController {
   constructor(@Inject(BoardsService) private boardsService: BoardsService) {}
 
   @Get()
-  getBoards(
-    @Param('projectId', ParseUUIDPipe) projectId: string,
-    @Req() req: RequestWithJwtInfo,
-  ) {
-    return this.boardsService.getBoards(projectId, req.user.id);
+  @UseGuards(ProjectGuards)
+  getBoards(@Param('projectId', ParseUUIDPipe) projectId: string) {
+    return this.boardsService.getBoards(projectId);
   }
 
   @Get(':id')
-  getBoardById(
-    @Param('projectId', ParseUUIDPipe) projectId: string,
-    @Param('id', ParseIntPipe) boardId: number,
-    @Req() req: RequestWithJwtInfo,
-  ) {
-    return this.boardsService.getBoardById(projectId, boardId, req.user.id);
+  getBoardById(@Param('id', ParseIntPipe) boardId: number) {
+    return this.boardsService.getBoardById(boardId);
   }
 
   @Post()
@@ -43,33 +37,21 @@ export class BoardsController {
   createBoard(
     @Param('projectId', ParseUUIDPipe) projectId: string,
     @Body() boardProps: BoardDto,
-    @Req() req: RequestWithJwtInfo,
   ) {
-    return this.boardsService.createBoard(projectId, boardProps, req.user.id);
+    return this.boardsService.createBoard(projectId, boardProps);
   }
 
   @Put(':id')
   @UsePipes(ValidationPipe)
   updateBoard(
-    @Param('projectId', ParseUUIDPipe) projectId: string,
     @Param('id', ParseIntPipe) boardId: number,
     @Body() boardProps: BoardDto,
-    @Req() req: RequestWithJwtInfo,
   ) {
-    return this.boardsService.updateBoard(
-      projectId,
-      boardId,
-      boardProps,
-      req.user.id,
-    );
+    return this.boardsService.updateBoard(boardId, boardProps);
   }
 
   @Delete(':id')
-  deleteBoard(
-    @Param('projectId', ParseUUIDPipe) projectId: string,
-    @Param('id', ParseIntPipe) boardId: number,
-    @Req() req: RequestWithJwtInfo,
-  ) {
-    return this.boardsService.deleteBoard(projectId, boardId, req.user.id);
+  deleteBoard(@Param('id', ParseIntPipe) boardId: number) {
+    return this.boardsService.deleteBoard(boardId);
   }
 }

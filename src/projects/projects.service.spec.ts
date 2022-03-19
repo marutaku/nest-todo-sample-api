@@ -44,15 +44,15 @@ describe('ProjectsService', () => {
   describe('findProjectById', () => {
     it('find project by id', async () => {
       mockRepository.findOne.mockResolvedValue(mockProject);
-      const result = await service.findProjectById(mockProject.id, mockUser.id);
+      const result = await service.findProjectById(mockProject.id);
       expect(result).toEqual(mockProject);
       expect(mockRepository.findOne).toBeCalled();
     });
     it('raise NotFoundException if project not found', async () => {
       mockRepository.findOne.mockResolvedValue(undefined);
-      expect(
-        service.findProjectById(mockProject.id, mockUser.id),
-      ).rejects.toThrowError(NotFoundException);
+      expect(service.findProjectById(mockProject.id)).rejects.toThrowError(
+        NotFoundException,
+      );
     });
   });
 
@@ -75,10 +75,7 @@ describe('ProjectsService', () => {
   describe('fetchUsersInProject', () => {
     it('fetch joined users', async () => {
       mockRepository.findOne.mockResolvedValue(mockProject);
-      const result = await service.fetchUsersInProject(
-        mockProject.id,
-        mockUser.id,
-      );
+      const result = await service.fetchUsersInProject(mockProject.id);
       expect(mockRepository.findOne).toBeCalledWith(mockProject.id, {
         relations: ['users'],
       });
@@ -93,11 +90,7 @@ describe('ProjectsService', () => {
         description: 'updated description',
       };
       service.findProjectById = jest.fn().mockResolvedValue(mockProject);
-      const result = await service.updateProject(
-        mockProject.id,
-        updateProps,
-        mockUser.id,
-      );
+      const result = await service.updateProject(mockProject.id, updateProps);
       expect(result).toEqual(Object.assign({}, mockProject, updateProps));
       expect(mockRepository.save).toBeCalled();
     });

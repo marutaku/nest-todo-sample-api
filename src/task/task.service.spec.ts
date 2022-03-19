@@ -83,12 +83,7 @@ describe('TasksService', () => {
       const mockTask = generateMockTask();
       taskRepository.save.mockResolvedValue(mockTask);
       expect(taskRepository.save).not.toHaveBeenCalled();
-      const result = await tasksService.createTask(
-        mockTask,
-        mockBoardId,
-        'test-project',
-        'testuser',
-      );
+      const result = await tasksService.createTask(mockTask, mockBoardId);
       expect(taskRepository.save).toHaveBeenCalled();
       expect(result).toEqual({
         title: mockTask.title,

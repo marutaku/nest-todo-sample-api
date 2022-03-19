@@ -12,26 +12,14 @@ export class BoardsService {
     @Inject(ProjectsService) private projectService: ProjectsService,
   ) {}
 
-  async getBoards(projectId: string, userId: string): Promise<Board[]> {
-    const project = await this.projectService.findProjectById(
-      projectId,
-      userId,
-    );
+  async getBoards(projectId: string): Promise<Board[]> {
+    const project = await this.projectService.findProjectById(projectId);
     return this.boardRepository.find({ project: project });
   }
 
-  async getBoardById(
-    projectId: string,
-    boardId: number,
-    userId: string,
-  ): Promise<Board> {
-    const project = await this.projectService.findProjectById(
-      projectId,
-      userId,
-    );
+  async getBoardById(boardId: number): Promise<Board> {
     const board = await this.boardRepository.findOne({
       id: boardId,
-      project,
     });
     if (!board) {
       throw new NotFoundException('board not found');
@@ -39,15 +27,8 @@ export class BoardsService {
     return board;
   }
 
-  async createBoard(
-    projectId: string,
-    boardProps: BoardDto,
-    userId: string,
-  ): Promise<Board> {
-    const project = await this.projectService.findProjectById(
-      projectId,
-      userId,
-    );
+  async createBoard(projectId: string, boardProps: BoardDto): Promise<Board> {
+    const project = await this.projectService.findProjectById(projectId);
     const board = new Board();
     board.name = boardProps.name;
     board.description = boardProps.description;
@@ -57,29 +38,18 @@ export class BoardsService {
   }
 
   async updateBoard(
-    projectId: string,
     boardId: number,
     boardProps: Partial<BoardDto>,
-    userId: string,
   ): Promise<Board> {
-    const board = await this.getBoardById(projectId, boardId, userId);
+    const board = await this.getBoardById(boardId);
     board.name = boardProps.name || board.name;
     board.description = boardProps.description || board.description;
     return this.boardRepository.save(board);
   }
 
-  async deleteBoard(
-    projectId: string,
-    boardId: number,
-    userId: string,
-  ): Promise<void> {
-    const project = await this.projectService.findProjectById(
-      projectId,
-      userId,
-    );
+  async deleteBoard(boardId: number): Promise<void> {
     const { affected } = await this.boardRepository.delete({
       id: boardId,
-      project,
     });
     if (!affected) {
       throw new NotFoundException('board not found');

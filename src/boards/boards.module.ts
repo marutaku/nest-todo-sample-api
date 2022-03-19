@@ -1,14 +1,20 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProjectsMiddleware } from '../projects/projects.middleware';
 import { ProjectsModule } from '../projects/projects.module';
+import { UsersModule } from '../users/users.module';
 import { Board } from './board.entity';
 import { BoardsController } from './boards.controller';
 import { BoardsService } from './boards.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Board]), ProjectsModule],
+  imports: [TypeOrmModule.forFeature([Board]), ProjectsModule, UsersModule],
   controllers: [BoardsController],
   providers: [BoardsService],
   exports: [BoardsService],
 })
-export class BoardsModule {}
+export class BoardsModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ProjectsMiddleware).forRoutes(BoardsController);
+  }
+}

@@ -32,19 +32,10 @@ export class TasksService {
     return task;
   }
 
-  async createTask(
-    taskProperty: TaskDto,
-    boardId: number,
-    projectId: string,
-    userId: string,
-  ): Promise<Task> {
+  async createTask(taskProperty: TaskDto, boardId: number): Promise<Task> {
     const { title, description, deadline } = taskProperty;
     const task = new Task();
-    const board = await this.boardService.getBoardById(
-      projectId,
-      boardId,
-      userId,
-    );
+    const board = await this.boardService.getBoardById(boardId);
     task.title = title;
     task.description = description;
     task.deadline = new Date(Date.parse(deadline));

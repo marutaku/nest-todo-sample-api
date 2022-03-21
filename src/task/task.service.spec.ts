@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BoardsService } from '../boards/boards.service';
 import { useMockRepositoryProvider } from '../share/test-support';
+import { TaskStatusService } from '../task-status/task-status.service';
 import { Task } from './task.entity';
 import { TasksService } from './task.service';
 
@@ -12,12 +13,19 @@ const mockBoard = {
   description: 'board description',
 };
 
+const mockStatus = {
+  id: 1,
+  name: 'TODO',
+  order: 1,
+};
+
 const generateMockTask = (mock = {}) => {
   return Object.assign(
     {
       title: 'mockTitle',
       description: 'mockDescription',
       deadline: new Date().toISOString(),
+      status: mockStatus,
     },
     mock,
   );
@@ -38,6 +46,15 @@ describe('TasksService', () => {
           provide: BoardsService,
           useValue: {
             getBoardById: jest.fn().mockResolvedValue(mockBoard),
+          },
+        },
+        {
+          provide: TaskStatusService,
+          useValue: {
+            findTaskByboardId: jest.fn().mockResolvedValue([mockStatus]),
+            findTaskStatusByBoardIdAndStatusId: jest
+              .fn()
+              .mockResolvedValue(mockStatus),
           },
         },
       ],
@@ -81,16 +98,18 @@ describe('TasksService', () => {
   describe('createTask', () => {
     it('insert task', async () => {
       const mockTask = generateMockTask();
-      taskRepository.save.mockResolvedValue(mockTask);
-      expect(taskRepository.save).not.toHaveBeenCalled();
+      taskRepository.save.mockResolvedValue(
+        Object.assign(mockTask, {
+          status: mockStatus,
+        }),
+      );
       const result = await tasksService.createTask(mockTask, mockBoardId);
       expect(taskRepository.save).toHaveBeenCalled();
       expect(result).toEqual({
         title: mockTask.title,
         description: mockTask.description,
         deadline: new Date(mockTask.deadline),
-        // ステータスがセットされるか
-        status: 'OPEN',
+        status: mockStatus,
       });
     });
   });
@@ -119,14 +138,13 @@ describe('TasksService', () => {
 
   describe('updateTaskStatus', () => {
     it('update task status', async () => {
-      const mockStatus = 'DONE';
       tasksService.getTaskById = jest
         .fn()
-        .mockResolvedValue(generateMockTask({ status: 'OPEN' }));
+        .mockResolvedValue(generateMockTask());
       expect(tasksService.getTaskById).not.toHaveBeenCalled();
       const result = await tasksService.updateTaskStatus(
         1,
-        mockStatus,
+        mockStatus.id,
         mockBoardId,
       );
       expect(tasksService.getTaskById).toHaveBeenCalled();

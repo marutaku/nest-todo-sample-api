@@ -9,12 +9,14 @@ import { BoardsService } from '../../src/boards/boards.service';
 import { Repository } from 'typeorm';
 import { TaskDto } from './task.dto';
 import { Task } from './task.entity';
+import { TaskStatusService } from '../task-status/task-status.service';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
     @Inject(BoardsService) private boardService: BoardsService,
+    @Inject(TaskStatusService) private taskStatusService: TaskStatusService,
   ) {}
 
   async getTasks(boardId: number): Promise<Task[]> {
@@ -38,10 +40,13 @@ export class TasksService {
     const { title, description, deadline } = taskProperty;
     const task = new Task();
     const board = await this.boardService.getBoardById(boardId);
+    const initialStatus = (
+      await this.taskStatusService.findTaskByboardId(boardId)
+    ).sort((a, b) => a.order - b.order)[0];
     task.title = title;
     task.description = description;
     task.deadline = new Date(Date.parse(deadline));
-    task.status = 'OPEN';
+    task.status = initialStatus;
     task.board = board;
 
     try {
@@ -66,11 +71,15 @@ export class TasksService {
 
   async updateTaskStatus(
     id: number,
-    status: string,
+    statusId: number,
     boardId: number,
   ): Promise<Task> {
     const task = await this.getTaskById(id, boardId);
-    task.status = status;
+    task.status =
+      await this.taskStatusService.findTaskStatusByBoardIdAndStatusId(
+        boardId,
+        statusId,
+      );
     await this.taskRepository.save(task);
     return task;
   }

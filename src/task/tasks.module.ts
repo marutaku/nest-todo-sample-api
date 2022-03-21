@@ -5,6 +5,7 @@ import { BoardsMiddleware } from '../boards/boards.middleware';
 import { BoardsModule } from '../boards/boards.module';
 import { ProjectsMiddleware } from '../projects/projects.middleware';
 import { ProjectsModule } from '../projects/projects.module';
+import { TaskStatusModule } from '../task-status/task-status.module';
 import { TaskController } from './task.controller';
 import { Task } from './task.entity';
 import { TasksService } from './task.service';
@@ -14,6 +15,7 @@ import { TasksService } from './task.service';
     TypeOrmModule.forFeature([Task, Board]),
     BoardsModule,
     ProjectsModule,
+    TaskStatusModule,
   ],
   controllers: [TaskController],
   providers: [TasksService],

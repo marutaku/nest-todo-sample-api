@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BoardsService } from '../boards/boards.service';
@@ -34,7 +34,7 @@ export class TaskStatusService {
   }
 
   async findTaskStatusByBoardIdAndStatusId(boardId: number, statusId: number) {
-    return this.taskStatusRepository.findOne({
+    const status = await this.taskStatusRepository.findOne({
       where: {
         id: statusId,
         board: {
@@ -42,5 +42,9 @@ export class TaskStatusService {
         },
       },
     });
+    if (!status) {
+      throw new NotFoundException('task status not found');
+    }
+    return status;
   }
 }

@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { BoardsService } from '../boards/boards.service';
+import { TaskStatusDto } from './task-status.dto';
 import { TaskStatus } from './task-status.entity';
 
 @Injectable()
@@ -8,6 +10,7 @@ export class TaskStatusService {
   constructor(
     @InjectRepository(TaskStatus)
     private taskStatusRepository: Repository<TaskStatus>,
+    @Inject(BoardsService) private boardService: BoardsService,
   ) {}
 
   async findTaskByboardId(boardId: number) {
@@ -18,6 +21,16 @@ export class TaskStatusService {
         },
       },
     });
+  }
+
+  async createTastStatus(boardId: number, statusProperty: TaskStatusDto) {
+    const board = await this.boardService.getBoardById(boardId);
+    const taskStatus = new TaskStatus();
+    taskStatus.name = statusProperty.name;
+    taskStatus.order = statusProperty.order;
+    taskStatus.board = board;
+    await this.taskStatusRepository.save(taskStatus);
+    return taskStatus;
   }
 
   async findTaskStatusByBoardIdAndStatusId(boardId: number, statusId: number) {

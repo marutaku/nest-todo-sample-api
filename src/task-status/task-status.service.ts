@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BoardsService } from '../boards/boards.service';
@@ -31,6 +36,36 @@ export class TaskStatusService {
     taskStatus.board = board;
     await this.taskStatusRepository.save(taskStatus);
     return taskStatus;
+  }
+
+  async updateTaskOrder(boardId: number, statusId: number, order: number) {
+    const targetStatus = await this.findTaskStatusByBoardIdAndStatusId(
+      boardId,
+      statusId,
+    );
+    const statusInBoard = await this.findTaskByboardId(boardId);
+    if (order > statusInBoard.length) {
+      throw new BadRequestException(
+        'The specified order exceeds the number of statuses',
+      );
+    }
+    const statusInBoardSorted = statusInBoard
+      .filter((s) => s.id !== statusId)
+      .sort((a, b) => a.order - b.order);
+    const statusOrderUpdated = statusInBoardSorted.splice(
+      order,
+      0,
+      targetStatus,
+    );
+    return (
+      await Promise.all(
+        statusOrderUpdated.map(async (status, index) => {
+          status.order = index + 1;
+          await this.taskStatusRepository.save(status);
+          return status;
+        }),
+      )
+    ).find((s) => s.id === statusId);
   }
 
   async findTaskStatusByBoardIdAndStatusId(boardId: number, statusId: number) {

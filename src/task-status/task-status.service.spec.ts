@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BoardsService } from '../boards/boards.service';
@@ -16,6 +16,9 @@ const mockStatus = {
   name: 'mock status',
   order: 1,
 };
+
+const generateMockStatus = (customProperties = {}) =>
+  Object.assign({}, mockStatus, customProperties);
 
 describe('TaskStatusService', () => {
   let service: TaskStatusService;
@@ -83,6 +86,42 @@ describe('TaskStatusService', () => {
       expect(result.name).toEqual(taskProperty.name);
       expect(result.order).toEqual(taskProperty.order);
       expect(result.board).toEqual(mockBaord);
+    });
+  });
+
+  describe('updateTaskOrder', () => {
+    const mockStatusList = [
+      generateMockStatus({ id: 1, order: 1 }),
+      generateMockStatus({ id: 2, order: 2 }),
+      generateMockStatus({ id: 3, order: 3 }),
+    ];
+    beforeEach(() => {
+      service.findTaskByboardId = jest.fn().mockResolvedValue(mockStatusList);
+      service.findTaskStatusByBoardIdAndStatusId = jest
+        .fn()
+        .mockResolvedValue(generateMockStatus(mockStatusList[0]));
+    });
+
+    it('update task order', async () => {
+      const newOrder = 3;
+      const result = await service.updateTaskOrder(1, mockStatus.id, newOrder);
+      expect(result.find((s) => s.id === mockStatusList[0].id).order).toEqual(
+        newOrder,
+      );
+      expect(result.find((s) => s.id === mockStatusList[1].id).order).toEqual(
+        1,
+      );
+      expect(result.find((s) => s.id === mockStatusList[2].id).order).toEqual(
+        2,
+      );
+    });
+    describe('invalid parameter', () => {
+      it('return exception if user pass order which greater than statuses in board', async () => {
+        const invalidOrder = 99;
+        expect(
+          service.updateTaskOrder(1, mockStatus.id, invalidOrder),
+        ).rejects.toThrowError(BadRequestException);
+      });
     });
   });
 });

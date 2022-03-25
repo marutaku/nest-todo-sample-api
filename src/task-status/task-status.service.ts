@@ -39,6 +39,9 @@ export class TaskStatusService {
   }
 
   async updateTaskOrder(boardId: number, statusId: number, order: number) {
+    if (order <= 0) {
+      throw new BadRequestException('Invalid order');
+    }
     const targetStatus = await this.findTaskStatusByBoardIdAndStatusId(
       boardId,
       statusId,
@@ -52,20 +55,16 @@ export class TaskStatusService {
     const statusInBoardSorted = statusInBoard
       .filter((s) => s.id !== statusId)
       .sort((a, b) => a.order - b.order);
-    const statusOrderUpdated = statusInBoardSorted.splice(
-      order,
-      0,
-      targetStatus,
-    );
+    statusInBoardSorted.splice(order, 0, targetStatus);
     return (
       await Promise.all(
-        statusOrderUpdated.map(async (status, index) => {
+        statusInBoardSorted.map(async (status, index) => {
           status.order = index + 1;
           await this.taskStatusRepository.save(status);
           return status;
         }),
       )
-    ).find((s) => s.id === statusId);
+    ).sort((a, b) => a.order - b.order);
   }
 
   async findTaskStatusByBoardIdAndStatusId(boardId: number, statusId: number) {

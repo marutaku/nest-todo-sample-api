@@ -45,14 +45,14 @@ describe('TaskStatusService', () => {
   describe('findTaskByboardId', () => {
     it('find status by id', async () => {
       repository.find.mockResolvedValue([mockStatus]);
-      const result = await service.findTaskByboardId(mockBaord.id);
+      const result = await service.findTaskStatusByboardId(mockBaord.id);
       expect(result).toBeInstanceOf(Array);
       expect(result[0]).toEqual(mockStatus);
     });
 
     it("return empty array if baord doesn't have task status", async () => {
       repository.find.mockResolvedValue([]);
-      const result = await service.findTaskByboardId(mockBaord.id);
+      const result = await service.findTaskStatusByboardId(mockBaord.id);
       expect(result).toBeInstanceOf(Array);
       expect(result.length).toEqual(0);
     });
@@ -96,7 +96,9 @@ describe('TaskStatusService', () => {
       generateMockStatus({ id: 3, order: 3 }),
     ];
     beforeEach(() => {
-      service.findTaskByboardId = jest.fn().mockResolvedValue(mockStatusList);
+      service.findTaskStatusByboardId = jest
+        .fn()
+        .mockResolvedValue(mockStatusList);
       service.findTaskStatusByBoardIdAndStatusId = jest
         .fn()
         .mockResolvedValue(generateMockStatus(mockStatusList[0]));

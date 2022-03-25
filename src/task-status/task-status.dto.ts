@@ -1,17 +1,10 @@
-import { IsNotEmpty, Min } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
-export class TaskStatusDto {
+export class CreateTaskStatusDto {
   @IsNotEmpty()
   name: string;
-
-  @Min(1)
-  @IsNotEmpty()
-  order: number;
 }
 
-export class TaskStatusUpdateDto {
+export class UpdateTaskStatusDto {
   name?: string;
-
-  @Min(1)
-  order?: number;
 }

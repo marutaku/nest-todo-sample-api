@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BoardsService } from '../boards/boards.service';
-import { TaskStatusDto } from './task-status.dto';
+import { CreateTaskStatusDto, UpdateTaskStatusDto } from './task-status.dto';
 import { TaskStatus } from './task-status.entity';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class TaskStatusService {
     @Inject(BoardsService) private boardService: BoardsService,
   ) {}
 
-  async findTaskByboardId(boardId: number) {
+  async findTaskStatusByboardId(boardId: number) {
     return this.taskStatusRepository.find({
       where: {
         board: {
@@ -28,11 +28,18 @@ export class TaskStatusService {
     });
   }
 
-  async createTastStatus(boardId: number, statusProperty: TaskStatusDto) {
+  async createTastStatus(boardId: number, statusProperty: CreateTaskStatusDto) {
     const board = await this.boardService.getBoardById(boardId);
+    const statusNum = await this.taskStatusRepository.count({
+      where: {
+        board: {
+          id: boardId,
+        },
+      },
+    });
     const taskStatus = new TaskStatus();
     taskStatus.name = statusProperty.name;
-    taskStatus.order = statusProperty.order;
+    taskStatus.order = statusNum + 1;
     taskStatus.board = board;
     await this.taskStatusRepository.save(taskStatus);
     return taskStatus;
@@ -46,7 +53,7 @@ export class TaskStatusService {
       boardId,
       statusId,
     );
-    const statusInBoard = await this.findTaskByboardId(boardId);
+    const statusInBoard = await this.findTaskStatusByboardId(boardId);
     if (order > statusInBoard.length) {
       throw new BadRequestException(
         'The specified order exceeds the number of statuses',
@@ -80,5 +87,31 @@ export class TaskStatusService {
       throw new NotFoundException('task status not found');
     }
     return status;
+  }
+
+  async updateStatus(
+    boardId: number,
+    statusId: number,
+    statusProperty: UpdateTaskStatusDto,
+  ) {
+    const status = await this.findTaskStatusByBoardIdAndStatusId(
+      boardId,
+      statusId,
+    );
+    const newStatus: TaskStatus = Object.assign(status, statusProperty);
+    await this.taskStatusRepository.save(newStatus);
+    return newStatus;
+  }
+
+  async deleteStatus(boardId: number, statusId: number) {
+    const result = await this.taskStatusRepository.delete({
+      id: statusId,
+      board: {
+        id: boardId,
+      },
+    });
+    if (result.affected === 0) {
+      throw new NotFoundException('Status not found');
+    }
   }
 }

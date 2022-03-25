@@ -41,7 +41,7 @@ export class TasksService {
     const task = new Task();
     const board = await this.boardService.getBoardById(boardId);
     const initialStatus = (
-      await this.taskStatusService.findTaskByboardId(boardId)
+      await this.taskStatusService.findTaskStatusByboardId(boardId)
     ).sort((a, b) => a.order - b.order)[0];
     task.title = title;
     task.description = description;

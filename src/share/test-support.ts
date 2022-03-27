@@ -7,6 +7,7 @@ export const generateMockRepository = () => {
     findOne: jest.fn(),
     save: jest.fn(),
     delete: jest.fn(),
+    count: jest.fn(),
   };
 };
 

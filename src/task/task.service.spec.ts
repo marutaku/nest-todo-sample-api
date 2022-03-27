@@ -51,7 +51,7 @@ describe('TasksService', () => {
         {
           provide: TaskStatusService,
           useValue: {
-            findTaskByboardId: jest.fn().mockResolvedValue([mockStatus]),
+            findTaskStatusByboardId: jest.fn().mockResolvedValue([mockStatus]),
             findTaskStatusByBoardIdAndStatusId: jest
               .fn()
               .mockResolvedValue(mockStatus),

@@ -80,11 +80,11 @@ describe('TaskStatusService', () => {
     it('create task successfully', async () => {
       const taskProperty = {
         name: mockStatus.name,
-        order: mockStatus.order,
       };
+      repository.count.mockResolvedValue(1);
       const result = await service.createTastStatus(mockBaord.id, taskProperty);
       expect(result.name).toEqual(taskProperty.name);
-      expect(result.order).toEqual(taskProperty.order);
+      expect(result.order).toEqual(2);
       expect(result.board).toEqual(mockBaord);
     });
   });

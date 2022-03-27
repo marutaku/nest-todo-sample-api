@@ -14,9 +14,6 @@ const ormconfig = new DataSource({
   logging: false,
   entities: ['./src/**/*.entity.{js,ts}'],
   migrations: ['migrations/**/*.ts'],
-  cli: {
-    migrationsDir: 'migrations',
-  },
 });
 
 export default ormconfig;

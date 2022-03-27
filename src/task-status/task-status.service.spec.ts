@@ -126,4 +126,32 @@ describe('TaskStatusService', () => {
       });
     });
   });
+
+  describe('updateStatus', () => {
+    it('update status name', async () => {
+      service.findTaskStatusByBoardIdAndStatusId = jest
+        .fn()
+        .mockResolvedValue(mockStatus);
+      const newStatus = {
+        name: 'updated status',
+      };
+      const result = await service.updateStatus(
+        mockBaord.id,
+        mockStatus.id,
+        newStatus,
+      );
+      expect(result.name).toEqual(newStatus.name);
+      expect(result.order).toEqual(mockStatus.order);
+    });
+  });
+
+  describe('deleteStatus', () => {
+    it('delete status success', async () => {
+      repository.delete.mockResolvedValue({ affected: 1 });
+      expect(service.deleteStatus(mockBaord.id, mockStatus.id)).resolves.toBe(
+        undefined,
+      );
+      expect(repository.delete).toBeCalled();
+    });
+  });
 });

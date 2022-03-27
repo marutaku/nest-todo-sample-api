@@ -15,7 +15,6 @@ import {
 import { BoardsGuard } from '../boards/boards.guard';
 import { ProjectGuard } from '../share/project.guard';
 import { TaskDto } from './task.dto';
-import { TaskStatusPipe } from './task.pipe';
 import { TasksService } from './task.service';
 
 @Controller('/projects/:projectId/boards/:boardId/tasks')
@@ -55,10 +54,10 @@ export class TaskController {
   @Put('/:id/status')
   updateStatus(
     @Param('id', ParseIntPipe) id: number,
-    @Body('status', TaskStatusPipe) status: string,
+    @Body('statusId') statusId: number,
     @Param('boardId', ParseIntPipe) boardId: number,
   ) {
-    return this.tasksService.updateTaskStatus(id, status, boardId);
+    return this.tasksService.updateTaskStatus(id, statusId, boardId);
   }
 
   @Put('/:id/')

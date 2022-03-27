@@ -7,13 +7,14 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
+import { TaskStatus } from '../task-status/task-status.entity';
 
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Board, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Board, (board) => board.taskStatus, { onDelete: 'CASCADE' })
   board: Board;
 
   @Column({
@@ -28,8 +29,8 @@ export class Task {
   @Column('date', { default: null })
   deadline: Date | null = null;
 
-  @Column()
-  status: string;
+  @ManyToOne(() => TaskStatus, (taskStatus) => taskStatus.tasks)
+  status: TaskStatus;
 
   @CreateDateColumn()
   readonly createdAt?: Date;

@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   Timestamp,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Project } from '../projects/project.entity';
+import { TaskStatus } from '../task-status/task-status.entity';
 
 @Entity()
 export class Board {
@@ -22,8 +24,13 @@ export class Board {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToOne(() => Project, (project) => project.boards)
+  @ManyToOne(() => Project, (project) => project.boards, {
+    onDelete: 'CASCADE',
+  })
   project: Project;
+
+  @OneToMany(() => TaskStatus, (taskStatus) => taskStatus.board)
+  taskStatus: TaskStatus[];
 
   @CreateDateColumn()
   readonly createdAt?: Timestamp;

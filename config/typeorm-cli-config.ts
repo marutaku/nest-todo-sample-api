@@ -1,9 +1,9 @@
-import { DataSourceOptions } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { config as loadConfig } from 'dotenv';
 
 loadConfig({ path: '.env/default.env', debug: true });
 
-const ormconfig: DataSourceOptions = {
+const ormconfig = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOSTNAME,
   port: parseInt(process.env.DB_PORT, 10),
@@ -14,6 +14,6 @@ const ormconfig: DataSourceOptions = {
   logging: false,
   entities: ['./src/**/*.entity.{js,ts}'],
   migrations: ['migrations/**/*.ts'],
-};
+});
 
 export default ormconfig;

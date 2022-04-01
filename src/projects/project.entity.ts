@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, GraphQLTimestamp, ID, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -16,7 +16,7 @@ import { User } from '../users/user.entity';
 @ObjectType()
 export class Project {
   @PrimaryGeneratedColumn('uuid')
-  @Field()
+  @Field((type) => ID)
   id: string;
 
   @Column()
@@ -37,8 +37,10 @@ export class Project {
   boards: Board[];
 
   @CreateDateColumn()
+  @Field((type) => GraphQLTimestamp)
   readonly ceatedAt: Date;
 
   @UpdateDateColumn()
+  @Field((type) => GraphQLTimestamp)
   readonly updatedat: Date;
 }

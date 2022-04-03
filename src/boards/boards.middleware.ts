@@ -7,7 +7,7 @@ export class BoardsMiddleware implements NestMiddleware {
   constructor(@Inject(BoardsService) private boardsService: BoardsService) {}
   async use(req: any, res: any, next: NextFunction) {
     const { boardId } = req.params;
-    req.board = await this.boardsService.getBoardById(boardId, true);
+    req.board = await this.boardsService.getBoardById(boardId, ['project']);
     next();
   }
 }

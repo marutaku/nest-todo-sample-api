@@ -12,16 +12,25 @@ export class BoardsService {
     @Inject(ProjectsService) private projectService: ProjectsService,
   ) {}
 
-  async getBoards(projectId: string): Promise<Board[]> {
-    return this.boardRepository.find({ where: { project: { id: projectId } } });
+  async getBoards(
+    projectId: string,
+    relations: string[] = [],
+  ): Promise<Board[]> {
+    return this.boardRepository.find({
+      where: { project: { id: projectId } },
+      relations,
+    });
   }
 
-  async getBoardById(boardId: number, withProject = false): Promise<Board> {
+  async getBoardById(
+    boardId: number,
+    relations: string[] = [],
+  ): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
         id: boardId,
       },
-      relations: withProject ? ['project'] : [],
+      relations,
     });
     if (!board) {
       throw new NotFoundException('board not found');

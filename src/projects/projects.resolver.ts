@@ -21,10 +21,11 @@ export class ProjectsResolver {
     nullable: true,
     defaultValue: Array,
   })
-  async fetchBoards(@Parent() project: Project) {
-    return (
-      // TODO: ここ直す
-      (await this.projectsService.findProjectById(project.id)).boards || []
-    );
+  async fetchBoards(@Parent() projectArg: Project) {
+    const project = await this.projectsService.findProjectById(projectArg.id, [
+      'users',
+      'boards',
+    ]);
+    return project.boards || [];
   }
 }

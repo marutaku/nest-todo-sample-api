@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, ParseUUIDPipe } from '@nestjs/common';
 import { Args, Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
 import { Board } from '../boards/board.entity';
 import { Project } from './project.entity';
@@ -12,7 +12,7 @@ export class ProjectsResolver {
 
   @Query(() => Project)
   async findProjectById(
-    @Args('projectId', { type: () => String }) projectId: string,
+    @Args('projectId', { type: () => String }, ParseUUIDPipe) projectId: string,
   ) {
     return this.projectsService.findProjectById(projectId);
   }

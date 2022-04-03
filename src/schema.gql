@@ -62,6 +62,7 @@ type User {
 }
 
 type Query {
+  fetchBoardById(boardId: Int!): Board!
   fetchBoardsByProjectId(projectId: String!): [Board!]!
   findProjectById(projectId: String!): Project!
 }

@@ -4,20 +4,20 @@ import { Board } from '../boards/board.entity';
 import { Project } from './project.entity';
 import { ProjectsService } from './projects.service';
 
-@Resolver((of) => Project)
+@Resolver(() => Project)
 export class ProjectsResolver {
   constructor(
     @Inject(ProjectsService) private projectsService: ProjectsService,
   ) {}
 
-  @Query((returns) => Project)
+  @Query(() => Project)
   async findProjectById(
     @Args('projectId', { type: () => String }) projectId: string,
   ) {
     return this.projectsService.findProjectById(projectId);
   }
 
-  @ResolveField('boards', (returns) => [Board], {
+  @ResolveField('boards', () => [Board], {
     nullable: true,
     defaultValue: Array,
   })

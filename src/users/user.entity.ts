@@ -13,25 +13,25 @@ import { Project } from '../projects/project.entity';
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  @Field((type) => ID)
+  @Field(() => ID)
   id: string;
 
   @Column()
-  @Field((type) => String)
+  @Field(() => String)
   name: string;
 
   @Column({ select: false })
   password: string;
 
   @ManyToMany(() => Project, (project) => project.users)
-  @Field((type) => [Project])
+  @Field(() => [Project])
   projects: Project[];
 
   @CreateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly createdAt: Date;
 
   @UpdateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly updatedAt: Date;
 }

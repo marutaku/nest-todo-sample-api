@@ -14,11 +14,11 @@ import { Field, GraphQLTimestamp, ID, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class Task {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field(() => ID)
   id: number;
 
   @ManyToOne(() => Board, (board) => board.taskStatus, { onDelete: 'CASCADE' })
-  @Field((type) => Board)
+  @Field(() => Board)
   board: Board;
 
   @Column({
@@ -37,14 +37,14 @@ export class Task {
   deadline: Date | null = null;
 
   @ManyToOne(() => TaskStatus, (taskStatus) => taskStatus.tasks)
-  @Field((type) => TaskStatus)
+  @Field(() => TaskStatus)
   status: TaskStatus;
 
   @CreateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly createdAt?: Date;
 
   @UpdateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly updatedAt?: Date;
 }

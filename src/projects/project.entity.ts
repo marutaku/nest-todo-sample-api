@@ -16,7 +16,7 @@ import { User } from '../users/user.entity';
 @ObjectType()
 export class Project {
   @PrimaryGeneratedColumn('uuid')
-  @Field((type) => ID)
+  @Field(() => ID)
   id: string;
 
   @Column()
@@ -29,18 +29,18 @@ export class Project {
 
   @ManyToMany(() => User, (user) => user.projects)
   @JoinTable()
-  @Field((type) => [User])
+  @Field(() => [User])
   users: User[];
 
   @OneToMany(() => Board, (board) => board.project)
-  @Field((type) => [Board])
+  @Field(() => [Board])
   boards: Board[];
 
   @CreateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly ceatedAt: Date;
 
   @UpdateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly updatedat: Date;
 }

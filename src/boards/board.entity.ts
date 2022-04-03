@@ -16,7 +16,7 @@ import { TaskStatus } from '../task-status/task-status.entity';
 @ObjectType()
 export class Board {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field(() => ID)
   id: number;
 
   @Column({
@@ -32,18 +32,18 @@ export class Board {
   @ManyToOne(() => Project, (project) => project.boards, {
     onDelete: 'CASCADE',
   })
-  @Field((type) => Project)
+  @Field(() => Project)
   project: Project;
 
   @OneToMany(() => TaskStatus, (taskStatus) => taskStatus.board)
-  @Field((type) => [TaskStatus])
+  @Field(() => [TaskStatus])
   taskStatus: TaskStatus[];
 
   @CreateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly createdAt?: Timestamp;
 
   @UpdateDateColumn()
-  @Field((type) => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   readonly updatedAt?: Timestamp;
 }

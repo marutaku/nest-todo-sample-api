@@ -11,7 +11,6 @@ import { ProjectsController } from './projects.controller';
 import { ProjectsMiddleware } from './projects.middleware';
 import { ProjectsService } from './projects.service';
 import { ProjectsResolver } from './projects.resolver';
-import { BoardsModule } from '../boards/boards.module';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forFeature([Project])],

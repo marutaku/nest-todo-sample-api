@@ -10,10 +10,11 @@ import { Project } from './project.entity';
 import { ProjectsController } from './projects.controller';
 import { ProjectsMiddleware } from './projects.middleware';
 import { ProjectsService } from './projects.service';
+import { ProjectsResolver } from './projects.resolver';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forFeature([Project])],
-  providers: [ProjectsService],
+  providers: [ProjectsService, ProjectsResolver],
   controllers: [ProjectsController],
   exports: [ProjectsService],
 })

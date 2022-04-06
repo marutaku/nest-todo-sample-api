@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { TaskStatusModule } from './task-status/task-status.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -21,6 +23,10 @@ import { TaskStatusModule } from './task-status/task-status.module';
       imports: [ConfigModule],
       // サービスクラスを指定する
       useClass: TypeOrmConfigService,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: 'src/schema.gql',
     }),
     TasksModule,
     BoardsModule,

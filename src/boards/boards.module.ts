@@ -6,11 +6,12 @@ import { UsersModule } from '../users/users.module';
 import { Board } from './board.entity';
 import { BoardsController } from './boards.controller';
 import { BoardsService } from './boards.service';
+import { BoardsResolver } from './boards.resolver';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Board]), ProjectsModule, UsersModule],
   controllers: [BoardsController],
-  providers: [BoardsService],
+  providers: [BoardsService, BoardsResolver],
   exports: [BoardsService],
 })
 export class BoardsModule implements NestModule {

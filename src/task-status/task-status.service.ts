@@ -18,13 +18,23 @@ export class TaskStatusService {
     @Inject(BoardsService) private boardService: BoardsService,
   ) {}
 
-  async findTaskStatusByboardId(boardId: number) {
+  async findTaskStatusById(taskStatusId: number, relations: string[] = []) {
+    return this.taskStatusRepository.findOne({
+      where: {
+        id: taskStatusId,
+      },
+      relations,
+    });
+  }
+
+  async findTaskStatusByboardId(boardId: number, relations: string[] = []) {
     return this.taskStatusRepository.find({
       where: {
         board: {
           id: boardId,
         },
       },
+      relations,
     });
   }
 

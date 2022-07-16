@@ -1,4 +1,4 @@
-FROM node:16.16.0
+FROM node:18.6.0
 
 RUN yarn global add @nestjs/cli
 

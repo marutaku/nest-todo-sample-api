@@ -9,6 +9,7 @@ name: Check pull request
       - './test/**/*.ts'
       - 'package.json'
       - 'config/**/*.ts'
+      - 'yarn.lock'
 
 jobs:
   build:

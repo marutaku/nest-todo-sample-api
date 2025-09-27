@@ -52,7 +52,7 @@
     "rimraf": "3.0.2",
     "rxjs": "7.8.2",
     "swagger-ui-express": "5.0.1",
-    "typeorm": "0.3.20"
+    "typeorm": "0.3.27"
   },
   "devDependencies": {
     "@commitlint/cli": "17.8.1",
